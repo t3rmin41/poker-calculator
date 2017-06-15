@@ -47,7 +47,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>com.simple.poker.calculator.PokerHandReaderImpl</mainClass>
+              <mainClass>com.simple.poker.calculator.CalculatorMain</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>

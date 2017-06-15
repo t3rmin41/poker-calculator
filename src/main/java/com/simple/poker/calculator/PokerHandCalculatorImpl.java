@@ -19,17 +19,28 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
 
   private static final Logger log = LoggerFactory.getLogger(PokerHandCalculatorImpl.class);
   
-  private static String url = PokerHandReaderImpl.URL;
-  //default broker URL is : tcp://localhost:61616"
+  private static String url = CalculatorMain.URL;
 
-  //Name of the queue we will receive messages from
-  private static String queue = PokerHandReaderImpl.QUEUE;
+  private static String queue = CalculatorMain.QUEUE;
 
-  
   @Override
   public void readFromQueue() {
-    // TODO Auto-generated method stub
-    
+    try {
+      ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
+      Connection connection = connectionFactory.createConnection(); // exception happens here...
+      connection.start();
+      Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+      Destination destination = session.createQueue(queue);
+      MessageConsumer consumer = session.createConsumer(destination);
+      Message message = consumer.receive();
+      ActiveMQTextMessage textMessage = (ActiveMQTextMessage) message;
+      String text = textMessage.getText();
+      log.info("Received message with text : " + text);
+    } catch (JMSException e) {
+      log.error(e.getMessage());
+    } catch (NullPointerException e) {
+      log.error(e.getMessage());
+    }
   }
 
   @Override
@@ -47,27 +58,7 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
   @Override
   public void run() {
     while (true) {
-      try {
-          ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
-          Connection connection = connectionFactory.createConnection(); // exception happens here...
-          connection.start();
-          Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-          Destination destination = session.createQueue(queue);
-          MessageConsumer consumer = session.createConsumer(destination);
-          
-            try {
-              Message message = consumer.receive();
-              ActiveMQTextMessage textMessage = (ActiveMQTextMessage) message;
-              String text = textMessage.getText();
-              log.info("Received message with text : " + text);
-            } catch (JMSException e) {
-              log.error(e.getMessage());
-            } catch (NullPointerException e) {
-              log.error(e.getMessage());
-            }
-       } catch (Exception e) {
-         log.error(e.getMessage());
-       }
+      readFromQueue();
     }
   }
   /**/
