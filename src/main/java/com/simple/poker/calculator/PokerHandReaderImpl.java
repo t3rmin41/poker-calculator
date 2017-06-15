@@ -21,40 +21,43 @@ public class PokerHandReaderImpl implements PokerHandReader {
 
   private static final Logger log = LoggerFactory.getLogger(PokerHandReaderImpl.class);
 
-  public static final String URL = "vm://localhost?create=false";
-  //default broker URL is : tcp://localhost:61616"
+  public static final String URL = "tcp://localhost:61616";
+  //default broker URL is : "tcp://localhost:61616"
 
   public static final String QUEUE = "POKERHANDQUEUE"; //Queue Name
   
   public static void main(String[] args) throws JMSException, Exception {
     
     BrokerService broker = new BrokerService();
-    // configure the broker
-    broker.setBrokerName("localhost");
-    broker.setUseJmx(false);
+    
+    TransportConnector connector = new TransportConnector();
+    connector.setUri(new URI(URL));
+    broker.addConnector(connector);
     broker.start();
     
     ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(URL);
     Connection connection = connectionFactory.createConnection();
     connection.start();
-    // JMS messages are sent and received using a Session. We will
-    // create here a non-transactional session object. If you want
-    // to use transactions you should set the first parameter to 'true'
+
     Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-    // Destination represents here our queue 'VALLYSOFTQ' on the
-    // JMS server. You don't have to do anything special on the
-    // server to create it, it will be created automatically.
+
     Destination destination = session.createQueue(QUEUE);
-    // MessageProducer is used for sending messages (as opposed
-    // to MessageConsumer which is used for receiving them)
     MessageProducer producer = session.createProducer(destination);
-    // We will send a small text message saying 'Hello' in Japanese
+
+
+    PokerHandCalculatorImpl pokerCalc = new PokerHandCalculatorImpl();
+    
+    Thread calcThread = new Thread(pokerCalc);
+    
+    calcThread.start();
+    
     while(true) {
       TextMessage message = session.createTextMessage("Send message to ActiveMQ!");
       // Here we are sending the message!
       producer.send(message);
-      log.info("Sentage '" + message.getText() + "'");
+      log.info("Sent message '" + message.getText() + "'");
     }
+
   }
   
   @Override
