@@ -1,6 +1,8 @@
 package com.simple.poker.calculator;
 
-public class Card {
+import java.io.Serializable;
+
+public class Card implements Serializable {
   
   private String rank;
   
@@ -8,26 +10,28 @@ public class Card {
 
   private int rankFormatted;
   
-  public Card(String rank, String color) {
-    setRank(rank);
-    setColor(color);
+  public Card(String rankAndColor) {
+    setRank(rankAndColor.substring(0, 1));
+    setColor(rankAndColor.substring(1, 2));
   }
 
   public String getRank() {
     return rank;
   }
 
-  public void setRank(String rank) {
+  public Card setRank(String rank) {
     this.rank = rank;
     setRankFormatted(rank);
+    return this;
   }
 
   public String getColor() {
     return color;
   }
 
-  public void setColor(String color) {
+  public Card setColor(String color) {
     this.color = color;
+    return this;
   }
   
   public int getRankFormatted() {

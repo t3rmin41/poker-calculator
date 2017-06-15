@@ -1,5 +1,8 @@
 package com.simple.poker.calculator;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URI;
 
 import javax.jms.Connection;
@@ -9,6 +12,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
+import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
@@ -36,8 +40,37 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
 
   @Override
   public void readCards() {
-    // TODO Auto-generated method stub
+    BufferedReader br = null;
+    try {
+      br = new BufferedReader(new FileReader("src/main/resources/poker_test.txt"));
+      String line;
+      while ((line = br.readLine()) != null) {
+         String[] cardsStrings = line.split(" ");
+         Hand firstPlayerHand = new Hand();
+         Hand secondPlayerHand = new Hand();
+         
+         for (int i = 0; i < 5; i++) {
+           firstPlayerHand.getCards().add(new Card(cardsStrings[i]));
+         }
+         for (int j = 5; j < 10; j++) {
+           secondPlayerHand.getCards().add(new Card(cardsStrings[j]));
+         }
 
+         HandContainer container = new HandContainer();
+         container.setFirstPlayerHand(firstPlayerHand);
+         container.setSecondPlayerHand(secondPlayerHand);
+         
+         putToQueue(container);
+      }
+    } catch (IOException e) {
+      log.error(e.getLocalizedMessage());
+    } finally {
+      try {
+        br.close();
+      } catch (IOException e) {
+        log.error(e.getLocalizedMessage());
+      }
+    }
   }
 
   @Override
@@ -49,9 +82,12 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
       Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
       Destination destination = session.createQueue(QUEUE);
       MessageProducer producer = session.createProducer(destination);
-      TextMessage message = session.createTextMessage("Send message to ActiveMQ!");
-      producer.send(message);
-      log.info("Sent message '" + message.getText() + "'");
+      //TextMessage message = session.createTextMessage("Send message to ActiveMQ!");
+      ObjectMessage objectMessage = session.createObjectMessage(handContainer);
+      //producer.send(message);
+      producer.send(objectMessage);
+      log.info("Sent message '" + handContainer + "'");
+      //log.info("Sent message '" + message.getText() + "'");
     } catch (JMSException e) {
       log.error(e.getMessage());
     } catch (NullPointerException e) {
@@ -61,9 +97,7 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
 
   @Override
   public void run() {
-    while (true) {
-      putToQueue(new HandContainer());
-    }
+    readCards();
   }
 
 }

@@ -6,10 +6,33 @@ import java.util.Set;
 
 public class HandContainer implements Serializable {
 
-  private Set<Hand> hands = new HashSet<Hand>();
+  private Hand firstPlayerHand;
+  private Hand secondPlayerHand;
   
-  public Set<Hand> getHands() {
-    return this.hands;
+  public Hand getFirstPlayerHand() {
+    return firstPlayerHand;
+  }
+  public void setFirstPlayerHand(Hand firstPlayerHand) {
+    this.firstPlayerHand = firstPlayerHand;
+  }
+  public Hand getSecondPlayerHand() {
+    return secondPlayerHand;
+  }
+  public void setSecondPlayerHand(Hand secondPlayerHand) {
+    this.secondPlayerHand = secondPlayerHand;
   }
 
+  @Override
+  public String toString() {
+    String stringified = "[";
+    for (Card card : firstPlayerHand.getCards()) {
+      stringified += card.getColor()+card.getRank()+";";
+    }
+    stringified += "] [";
+    for (Card card : secondPlayerHand.getCards()) {
+      stringified += card.getColor()+card.getRank()+";";
+    }
+    stringified += "]";
+    return stringified;
+  }
 }

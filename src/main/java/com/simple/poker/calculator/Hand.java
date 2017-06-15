@@ -1,9 +1,10 @@
 package com.simple.poker.calculator;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Hand {
+public class Hand implements Serializable {
 
   private int strength;
   
@@ -15,5 +16,9 @@ public class Hand {
   
   public void arrangeHandByCardRank() {
     // arrange hand by card's formatted rank
+  }
+
+  public Set<Card> getCards() {
+    return cards;
   }
 }

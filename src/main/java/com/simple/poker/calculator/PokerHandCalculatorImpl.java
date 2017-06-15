@@ -33,9 +33,14 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
       Destination destination = session.createQueue(queue);
       MessageConsumer consumer = session.createConsumer(destination);
       Message message = consumer.receive();
-      ActiveMQTextMessage textMessage = (ActiveMQTextMessage) message;
-      String text = textMessage.getText();
-      log.info("Received message with text : " + text);
+      if (message instanceof ObjectMessage) {
+        ObjectMessage objectMessage = (ObjectMessage) message;
+        HandContainer handContainer = (HandContainer) objectMessage.getObject();
+        log.info("Received message container : " + handContainer);
+      }
+      //ActiveMQTextMessage textMessage = (ActiveMQTextMessage) message;
+      //String text = textMessage.getText();
+      //log.info("Received message with text : " + text);
     } catch (JMSException e) {
       log.error(e.getMessage());
     } catch (NullPointerException e) {
