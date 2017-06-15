@@ -40,6 +40,7 @@ public class CalculatorMain {
 
     PokerHandCalculatorImpl pokerCalc = new PokerHandCalculatorImpl();
     PokerHandReaderImpl pokerReader = new PokerHandReaderImpl();
+    pokerReader.setDatasourceFile("src/main/resources/poker_test.txt");
     
     Thread readerThread = new Thread(pokerReader);
     Thread calcThread = new Thread(pokerCalc);

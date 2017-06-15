@@ -31,18 +31,19 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
   private static final String URL = CalculatorMain.URL;
 
   private static final String QUEUE = CalculatorMain.QUEUE;
+  
+  private String datasourceFilePath = "";
 
   @Override
-  public void setDatasourceFile() {
-    // TODO Auto-generated method stub
-
+  public void setDatasourceFile(String path) {
+    this.datasourceFilePath = path;
   }
 
   @Override
   public void readCards() {
     BufferedReader br = null;
     try {
-      br = new BufferedReader(new FileReader("src/main/resources/poker_test.txt"));
+      br = new BufferedReader(new FileReader(datasourceFilePath));
       String line;
       while ((line = br.readLine()) != null) {
          String[] cardsStrings = line.split(" ");

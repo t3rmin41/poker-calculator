@@ -2,7 +2,7 @@ package com.simple.poker.calculator;
 
 public interface PokerHandReader {
 
-  void setDatasourceFile();
+  void setDatasourceFile(String path);
   
   void readCards();
   
