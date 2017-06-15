@@ -1,6 +1,6 @@
 package com.simple.poker.calculator;
 
-public interface PokerCardReader {
+public interface PokerHandReader {
 
   void setDatasourceFile();
   
