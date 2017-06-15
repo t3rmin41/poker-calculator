@@ -6,5 +6,5 @@ public interface PokerCardReader {
   
   void readCards();
   
-  void putToQueue();
+  void putToQueue(HandContainer handContainer);
 }
