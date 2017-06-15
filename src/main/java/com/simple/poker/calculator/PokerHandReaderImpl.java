@@ -34,6 +34,10 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
   
   private String datasourceFilePath = "";
 
+  private Session session;
+  
+  private Connection connection;
+  
   @Override
   public void setDatasourceFile(String path) {
     this.datasourceFilePath = path;
@@ -42,6 +46,7 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
   @Override
   public void readCards() {
     BufferedReader br = null;
+    initiateQueueSession();
     try {
       br = new BufferedReader(new FileReader(datasourceFilePath));
       String line;
@@ -63,6 +68,11 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
          
          putToQueue(container);
       }
+      try {
+          getQueueConnection().close();
+      } catch (JMSException e) {
+          log.error(e.getLocalizedMessage());
+      }
     } catch (IOException e) {
       log.error(e.getLocalizedMessage());
     } finally {
@@ -77,12 +87,8 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
   @Override
   public void putToQueue(HandContainer handContainer) {
     try {
-      ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(URL);
-      Connection connection = connectionFactory.createConnection();
-      connection.start();
-      Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-      Destination destination = session.createQueue(QUEUE);
-      MessageProducer producer = session.createProducer(destination);
+      Destination destination = getQueueSession().createQueue(QUEUE);
+      MessageProducer producer = getQueueSession().createProducer(destination);
       //TextMessage message = session.createTextMessage("Send message to ActiveMQ!");
       ObjectMessage objectMessage = session.createObjectMessage(handContainer);
       //producer.send(message);
@@ -101,4 +107,26 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
     readCards();
   }
 
+  private void initiateQueueSession() {
+      try {
+          ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(URL);
+          connection = connectionFactory.createConnection();
+          connection.start();
+          session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+          //Destination destination = session.createQueue(QUEUE);
+          //MessageProducer producer = session.createProducer(destination);
+        } catch (JMSException e) {
+          log.error(e.getMessage());
+        } catch (NullPointerException e) {
+          log.error(e.getMessage());
+        }
+  }
+  
+  public Session getQueueSession() {
+    return session;
+  }
+  
+  public Connection getQueueConnection() {
+    return connection;
+  }
 }

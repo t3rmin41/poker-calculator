@@ -5,7 +5,6 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.TextMessage;
@@ -22,21 +21,25 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
   private static String url = CalculatorMain.URL;
 
   private static String queue = CalculatorMain.QUEUE;
+  
+  private Connection connection;
 
   @Override
   public void readFromQueue() {
     try {
       ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
-      Connection connection = connectionFactory.createConnection(); // exception happens here...
+      connection = connectionFactory.createConnection(); // exception happens here...
       connection.start();
       Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
       Destination destination = session.createQueue(queue);
       MessageConsumer consumer = session.createConsumer(destination);
-      Message message = consumer.receive();
-      if (message instanceof ObjectMessage) {
-        ObjectMessage objectMessage = (ObjectMessage) message;
-        HandContainer handContainer = (HandContainer) objectMessage.getObject();
-        log.info("Received message container : " + handContainer);
+      while (true) {
+        Message message = consumer.receive();
+        if (message instanceof ObjectMessage) {
+          ObjectMessage objectMessage = (ObjectMessage) message;
+          HandContainer handContainer = (HandContainer) objectMessage.getObject();
+          log.info("Received message container : " + handContainer);
+        }
       }
       //ActiveMQTextMessage textMessage = (ActiveMQTextMessage) message;
       //String text = textMessage.getText();
@@ -45,6 +48,12 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
       log.error(e.getMessage());
     } catch (NullPointerException e) {
       log.error(e.getMessage());
+    } finally {
+      try {
+        connection.close();
+      } catch (JMSException e) {
+          log.error(e.getLocalizedMessage());
+      }
     }
   }
 
@@ -62,10 +71,7 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
 
   @Override
   public void run() {
-    while (true) {
       readFromQueue();
-    }
   }
-  /**/
 
 }

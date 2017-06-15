@@ -29,6 +29,7 @@ public class CalculatorMain {
     TransportConnector connector = new TransportConnector();
     connector.setUri(new URI(URL));
     broker.addConnector(connector);
+    broker.setUseJmx(false);
     broker.start();
     
     ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(URL);
