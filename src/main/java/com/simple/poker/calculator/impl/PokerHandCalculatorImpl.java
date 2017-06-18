@@ -1,4 +1,4 @@
-package com.simple.poker.calculator;
+package com.simple.poker.calculator.impl;
 
 import javax.jms.Connection;
 import javax.jms.Destination;
@@ -13,6 +13,10 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.simple.poker.calculator.api.PokerHandCalculator;
+import com.simple.poker.calculator.entity.HandContainer;
+import com.simple.poker.calculator.main.CalculatorMain;
 
 public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
 

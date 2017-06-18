@@ -1,4 +1,4 @@
-package com.simple.poker.calculator;
+package com.simple.poker.calculator.api;
 
 public interface PokerHandCalculator {
 

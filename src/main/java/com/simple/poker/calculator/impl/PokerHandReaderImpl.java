@@ -1,4 +1,4 @@
-package com.simple.poker.calculator;
+package com.simple.poker.calculator.impl;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -23,6 +23,12 @@ import org.apache.activemq.broker.TransportConnector;
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.simple.poker.calculator.api.PokerHandReader;
+import com.simple.poker.calculator.entity.Card;
+import com.simple.poker.calculator.entity.Hand;
+import com.simple.poker.calculator.entity.HandContainer;
+import com.simple.poker.calculator.main.CalculatorMain;
 
 public class PokerHandReaderImpl implements PokerHandReader, Runnable {
 

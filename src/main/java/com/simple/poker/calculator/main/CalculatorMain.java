@@ -1,4 +1,4 @@
-package com.simple.poker.calculator;
+package com.simple.poker.calculator.main;
 
 import java.net.URI;
 
@@ -14,6 +14,9 @@ import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.broker.TransportConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.simple.poker.calculator.impl.PokerHandCalculatorImpl;
+import com.simple.poker.calculator.impl.PokerHandReaderImpl;
 
 public class CalculatorMain {
 

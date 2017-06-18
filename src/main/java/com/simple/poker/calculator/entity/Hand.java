@@ -1,4 +1,4 @@
-package com.simple.poker.calculator;
+package com.simple.poker.calculator.entity;
 
 import java.io.Serializable;
 import java.util.HashSet;

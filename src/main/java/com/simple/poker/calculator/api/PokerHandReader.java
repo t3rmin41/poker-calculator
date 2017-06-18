@@ -1,4 +1,6 @@
-package com.simple.poker.calculator;
+package com.simple.poker.calculator.api;
+
+import com.simple.poker.calculator.entity.HandContainer;
 
 public interface PokerHandReader {
 
