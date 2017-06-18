@@ -2,32 +2,64 @@
 
   <property name="log-dir" value="application-log" />
 
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  <property name="log-pattern" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
     <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <pattern>${log-pattern}</pattern>
     </encoder>
   </appender>
 
-  <appender name="SYSLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./${log-dir}/sys.log</file>
-        <append>false</append>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </layout>
-        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <FileNamePattern>./${log-dir}/sys.%i.log.zip</FileNamePattern>
-            <MinIndex>1</MinIndex>
-            <MaxIndex>10</MaxIndex>
-        </rollingPolicy>
- 
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <MaxFileSize>10MB</MaxFileSize>
-        </triggeringPolicy>
+  <appender name="SYSLOG" class="ch.qos.logback.classic.sift.SiftingAppender">
+      <discriminator class="ch.qos.logback.classic.sift.JNDIBasedContextDiscriminator" />
+      <sift>
+        <appender name="syslogappender"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>./${log-dir}/sys.log</file>
+            <append>false</append>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${log-pattern}</pattern>
+            </layout>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>./${log-dir}/sys.%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+                <maxHistory>10</maxHistory>
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                   <maxFileSize>10MB</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+            </rollingPolicy>
+        </appender>
+     </sift>
   </appender>
 
-  <root level="INFO" additivity="false">
-    <appender-ref ref="STDOUT" />
+  <appender name="OUTPUT" class="ch.qos.logback.classic.sift.SiftingAppender">
+      <discriminator class="ch.qos.logback.classic.sift.JNDIBasedContextDiscriminator" />
+      <sift>
+        <appender name="outputappender"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>./${log-dir}/output.log</file>
+            <append>false</append>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${log-pattern}</pattern>
+            </layout>
+            <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+                <FileNamePattern>./${log-dir}/output.%i.log.zip</FileNamePattern>
+                <MinIndex>1</MinIndex>
+                <MaxIndex>10</MaxIndex>
+            </rollingPolicy>
+ 
+            <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+                <MaxFileSize>10MB</MaxFileSize>
+            </triggeringPolicy>
+        </appender>
+      </sift>
+  </appender>
+
+  <logger name="com.simple.poker.calculator.impl" additivity="false">
+    <appender-ref ref="CONSOLE" />
+    <appender-ref ref="OUTPUT" />
+  </logger>
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
     <appender-ref ref="SYSLOG" />
   </root>
 </configuration>

@@ -26,40 +26,9 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
 
   private static String queue = CalculatorMain.QUEUE;
   
-  private Connection connection;
-
-  @Override
-  public void readFromQueue() {
-    try {
-      ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
-      connection = connectionFactory.createConnection(); // exception happens here...
-      connection.start();
-      Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-      Destination destination = session.createQueue(queue);
-      MessageConsumer consumer = session.createConsumer(destination);
-      while (true) {
-        Message message = consumer.receive();
-        if (message instanceof ObjectMessage) {
-          ObjectMessage objectMessage = (ObjectMessage) message;
-          HandContainer handContainer = (HandContainer) objectMessage.getObject();
-          log.info("Received message container : " + handContainer);
-        }
-      }
-      //ActiveMQTextMessage textMessage = (ActiveMQTextMessage) message;
-      //String text = textMessage.getText();
-      //log.info("Received message with text : " + text);
-    } catch (JMSException e) {
-      log.error(e.getMessage());
-    } catch (NullPointerException e) {
-      log.error(e.getMessage());
-    } finally {
-      try {
-        connection.close();
-      } catch (JMSException e) {
-          log.error(e.getLocalizedMessage());
-      }
-    }
-  }
+  private Session session;
+  
+  private MessageConsumer consumer;
 
   @Override
   public void calculateHand() {
@@ -75,7 +44,50 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
 
   @Override
   public void run() {
+      initiateQueueSession();
       readFromQueue();
   }
 
+  private void readFromQueue() {
+      try {
+        while (true) {
+          //ActiveMQTextMessage textMessage = (ActiveMQTextMessage) message;
+          //String text = textMessage.getText();
+          //log.info("Received message with text : " + text);
+          Message message = consumer.receive();
+          if (message instanceof ObjectMessage) {
+            ObjectMessage objectMessage = (ObjectMessage) message;
+            HandContainer handContainer = (HandContainer) objectMessage.getObject();
+            log.info("Received message container : " + handContainer);
+          }
+        }
+        
+      } catch (JMSException e) {
+        log.error(e.getMessage());
+      } catch (NullPointerException e) {
+        log.error(e.getMessage());
+      } finally {
+        try {
+            session.close();
+        } catch (JMSException e) {
+            log.error(e.getLocalizedMessage());
+        }
+      }
+  }
+  
+  private void initiateQueueSession() {
+      try {
+          ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
+          Connection connection = connectionFactory.createConnection(); // exception happens here...
+          connection.start();
+          session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+          Destination destination = session.createQueue(queue);
+          consumer = session.createConsumer(destination);
+      } catch (JMSException e) {
+          log.error(e.getMessage());
+      } catch (NullPointerException e) {
+          log.error(e.getMessage());
+      }
+  }
+  
 }

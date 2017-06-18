@@ -6,7 +6,6 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.MessageProducer;
 import javax.jms.Session;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -27,6 +26,9 @@ public class CalculatorMain {
   public static final String QUEUE = "POKERHANDQUEUE";
 
   public static void main(String[] args) throws JMSException, Exception {
+    
+    log.info("Start poker calculator");
+    
     BrokerService broker = new BrokerService();
     
     TransportConnector connector = new TransportConnector();
@@ -44,7 +46,12 @@ public class CalculatorMain {
 
     PokerHandCalculatorImpl pokerCalc = new PokerHandCalculatorImpl();
     PokerHandReaderImpl pokerReader = new PokerHandReaderImpl();
-    pokerReader.setDatasourceFile("src/main/resources/poker_test.txt");
+
+    if (args.length > 0) {
+        pokerReader.setDatasourceFile(args[0]);
+    } else {
+        pokerReader.setDatasourceFile("./src/main/data/poker_test.txt");
+    }
     
     Thread readerThread = new Thread(pokerReader);
     Thread calcThread = new Thread(pokerCalc);
