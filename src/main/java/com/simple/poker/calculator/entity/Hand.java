@@ -1,14 +1,14 @@
 package com.simple.poker.calculator.entity;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Hand implements Serializable {
 
-  private int strength;
+  private HandStrength strength;
   
-  private Set<Card> cards = new HashSet<Card>();
+  private List<Card> cards = new ArrayList<Card>();
 
   public void calculateHandStrength() {
     
@@ -18,7 +18,7 @@ public class Hand implements Serializable {
     // arrange hand by card's formatted rank
   }
 
-  public Set<Card> getCards() {
+  public List<Card> getCards() {
     return cards;
   }
 }
