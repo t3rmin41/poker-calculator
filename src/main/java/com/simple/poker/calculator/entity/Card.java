@@ -2,7 +2,7 @@ package com.simple.poker.calculator.entity;
 
 import java.io.Serializable;
 
-public class Card implements Serializable {
+public class Card implements Comparable<Card>, Serializable {
   
   private String rank;
   
@@ -38,6 +38,11 @@ public class Card implements Serializable {
     return rankFormatted;
   }
   
+  @Override
+  public int compareTo(Card o) {
+    return Integer.compare(this.rankFormatted, o.rankFormatted);
+  }
+  
   private void setRankFormatted(String rank) {
     switch (rank) {
       case "2" : this.rankFormatted = 2;
@@ -70,5 +75,4 @@ public class Card implements Serializable {
                  break;
     }
   }
-
 }

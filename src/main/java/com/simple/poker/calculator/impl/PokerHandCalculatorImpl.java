@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.simple.poker.calculator.api.PokerHandCalculator;
+import com.simple.poker.calculator.entity.Card;
 import com.simple.poker.calculator.entity.Hand;
 import com.simple.poker.calculator.entity.HandContainer;
 import com.simple.poker.calculator.main.CalculatorMain;
@@ -50,6 +51,12 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
   }
 
   private boolean isRepeatable(Hand hand) {
+      hand.arrangeHandByCardRank();
+      for (int i = 1; i < hand.getCards().size(); i++) {
+        if (hand.getCards().get(i).getRankFormatted() == hand.getCards().get(0).getRankFormatted()) {
+          return true;
+        }
+      }
       return false;
   }
   

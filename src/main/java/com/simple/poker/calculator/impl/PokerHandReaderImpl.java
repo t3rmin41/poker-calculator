@@ -57,8 +57,8 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
          Hand secondPlayerHand = new Hand();
          
          for (int j = 0; j < 5; j++) {
-           firstPlayerHand.getCards()[j] = new Card(firstArr[j]);
-           secondPlayerHand.getCards()[j] = new Card(secondArr[j]);
+           firstPlayerHand.getCards().add(j, new Card(firstArr[j]));
+           secondPlayerHand.getCards().add(j, new Card(secondArr[j]));
          }
          HandContainer container = new HandContainer();
          container.setFirstPlayerHand(firstPlayerHand);
