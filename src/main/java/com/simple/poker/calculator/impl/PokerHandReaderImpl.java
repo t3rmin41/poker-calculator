@@ -47,28 +47,25 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
     try {
       br = new BufferedReader(new FileReader(datasourceFilePath));
       String line;
+      int i = 1;
       while ((line = br.readLine()) != null) {
-         String[] cardsStrings = line.split(" ");
+         String first = line.substring(0, 14);
+         String second = line.substring(15, 29);
+         String[] firstArr = first.split(" ");
+         String[] secondArr = second.split(" ");
          Hand firstPlayerHand = new Hand();
          Hand secondPlayerHand = new Hand();
          
-         for (int i = 0; i < 5; i++) {
-           firstPlayerHand.getCards()[i] = new Card(cardsStrings[i]);
+         for (int j = 0; j < 5; j++) {
+           firstPlayerHand.getCards()[j] = new Card(firstArr[j]);
+           secondPlayerHand.getCards()[j] = new Card(secondArr[j]);
          }
-         for (int j = 5; j < 10; j++) {
-           secondPlayerHand.getCards()[j] = new Card(cardsStrings[j]);
-         }
-
          HandContainer container = new HandContainer();
          container.setFirstPlayerHand(firstPlayerHand);
          container.setSecondPlayerHand(secondPlayerHand);
-         
+         container.setId(i);
          putToQueue(container);
-      }
-      try {
-          session.close();
-      } catch (JMSException e) {
-          log.error(e.getLocalizedMessage());
+         i++;
       }
     } catch (IOException e) {
       log.error(e.getLocalizedMessage());
@@ -78,6 +75,12 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
       } catch (IOException e) {
         log.error(e.getLocalizedMessage());
       }
+    }
+    //close queue session when done
+    try {
+        session.close();
+    } catch (JMSException e) {
+        log.error(e.getLocalizedMessage());
     }
   }
 

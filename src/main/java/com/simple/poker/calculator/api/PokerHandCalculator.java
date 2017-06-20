@@ -8,6 +8,6 @@ public interface PokerHandCalculator {
   
   public final String[] colors = {"S", "H", "C", "D"};
 
-  void calculateHand(Hand hand);
+  Hand calculateHand(Hand hand);
 
 }

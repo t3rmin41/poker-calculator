@@ -1,14 +1,21 @@
 package com.simple.poker.calculator.entity;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 public class HandContainer implements Serializable {
 
+  private int id;
+  
   private Hand firstPlayerHand;
   private Hand secondPlayerHand;
+  private int winner;
   
+  public int getId() {
+    return id;
+  }
+  public void setId(int id) {
+    this.id = id;
+  }
   public Hand getFirstPlayerHand() {
     return firstPlayerHand;
   }
@@ -21,7 +28,12 @@ public class HandContainer implements Serializable {
   public void setSecondPlayerHand(Hand secondPlayerHand) {
     this.secondPlayerHand = secondPlayerHand;
   }
-
+  public void defineWinner() {
+      
+  }
+  public int getWinner() {
+      return winner;
+  }
   @Override
   public String toString() {
     String stringified = "[";

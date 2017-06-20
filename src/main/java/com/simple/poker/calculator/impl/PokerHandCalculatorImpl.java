@@ -32,15 +32,15 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
   private MessageConsumer consumer;
 
   @Override
-  public void calculateHand(Hand hand) {
+  public Hand calculateHand(Hand hand) {
     // TODO Auto-generated method stub
-    
+    Hand calculatedHand = new Hand();
     if (isRepeatable(hand)) {
         calculateRepeatable(hand);
     } else {
         calculateNonRepeatable(hand);
     }
-      
+    return calculatedHand;
   }
 
   @Override
@@ -72,9 +72,14 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
             ObjectMessage objectMessage = (ObjectMessage) message;
             HandContainer handContainer = (HandContainer) objectMessage.getObject();
             log.info("Received message container : " + handContainer);
+            Hand firstHand = calculateHand(handContainer.getFirstPlayerHand());
+            Hand secondHand = calculateHand(handContainer.getSecondPlayerHand());
+            handContainer.setFirstPlayerHand(firstHand);
+            handContainer.setSecondPlayerHand(secondHand);
+            handContainer.defineWinner();
+            log.info("Hand #"+handContainer.getId()+" wins player #"+handContainer.getWinner());
           }
         }
-        
       } catch (JMSException e) {
         log.error(e.getMessage());
       } catch (NullPointerException e) {
@@ -91,7 +96,7 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
   private void initiateQueueSession() {
       try {
           ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
-          Connection connection = connectionFactory.createConnection(); // exception happens here...
+          Connection connection = connectionFactory.createConnection();
           connection.start();
           session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
           Destination destination = session.createQueue(queue);
