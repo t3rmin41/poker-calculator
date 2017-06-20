@@ -40,6 +40,7 @@ public class HandContainer implements Serializable {
       stringified += card.getColor()+card.getRank()+";";
     }
     stringified += "(repeatable = "+firstPlayerHand.isRepeatable()+")";
+
     stringified += "] [";
     for (Card card : secondPlayerHand.getCards()) {
       stringified += card.getColor()+card.getRank()+";";
