@@ -8,10 +8,6 @@ public class Hand implements Serializable {
   
   private Card[] cards = new Card[5];
 
-  public void calculateHandStrength() {
-    
-  }
-  
   public void arrangeHandByCardRank() {
     // arrange hand by card's formatted rank
   }

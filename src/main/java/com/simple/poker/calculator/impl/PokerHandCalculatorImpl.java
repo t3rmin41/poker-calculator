@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.simple.poker.calculator.api.PokerHandCalculator;
+import com.simple.poker.calculator.entity.Hand;
 import com.simple.poker.calculator.entity.HandContainer;
 import com.simple.poker.calculator.main.CalculatorMain;
 
@@ -31,15 +32,15 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
   private MessageConsumer consumer;
 
   @Override
-  public void calculateHand() {
+  public void calculateHand(Hand hand) {
     // TODO Auto-generated method stub
     
-  }
-
-  @Override
-  public void getStats() {
-    // TODO Auto-generated method stub
-    
+    if (isRepeatable(hand)) {
+        calculateRepeatable(hand);
+    } else {
+        calculateNonRepeatable(hand);
+    }
+      
   }
 
   @Override
@@ -48,6 +49,18 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
       readFromQueue();
   }
 
+  private boolean isRepeatable(Hand hand) {
+      return false;
+  }
+  
+  private void calculateRepeatable(Hand hand) {
+      
+  }
+  
+  private void calculateNonRepeatable(Hand hand) {
+      
+  }
+  
   private void readFromQueue() {
       try {
         while (true) {
