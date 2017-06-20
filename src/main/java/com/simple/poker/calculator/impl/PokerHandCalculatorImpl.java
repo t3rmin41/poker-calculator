@@ -34,14 +34,12 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
 
   @Override
   public Hand calculateHand(Hand hand) {
-    // TODO Auto-generated method stub
-    Hand calculatedHand = new Hand();
     if (isRepeatable(hand)) {
         calculateRepeatable(hand);
     } else {
         calculateNonRepeatable(hand);
     }
-    return calculatedHand;
+    return hand;
   }
 
   @Override
@@ -54,10 +52,10 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
       hand.arrangeHandByCardRank();
       for (int i = 1; i < hand.getCards().size(); i++) {
         if (hand.getCards().get(i).getRankFormatted() == hand.getCards().get(0).getRankFormatted()) {
-          return true;
+          return hand.setRepeatable(true).isRepeatable();
         }
       }
-      return false;
+      return hand.setRepeatable(false).isRepeatable();
   }
   
   private void calculateRepeatable(Hand hand) {
@@ -79,10 +77,10 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
             ObjectMessage objectMessage = (ObjectMessage) message;
             HandContainer handContainer = (HandContainer) objectMessage.getObject();
             log.info("Received "+handContainer.getId()+" message container : " + handContainer);
-            handContainer.getFirstPlayerHand().arrangeHandByCardRank();
-            handContainer.getSecondPlayerHand().arrangeHandByCardRank();
-            //Hand firstHand = calculateHand(handContainer.getFirstPlayerHand());
-            //Hand secondHand = calculateHand(handContainer.getSecondPlayerHand());
+            //handContainer.getFirstPlayerHand().arrangeHandByCardRank();
+            //handContainer.getSecondPlayerHand().arrangeHandByCardRank();
+            calculateHand(handContainer.getFirstPlayerHand());
+            calculateHand(handContainer.getSecondPlayerHand());
             //handContainer.setFirstPlayerHand(firstHand);
             //handContainer.setSecondPlayerHand(secondHand);
             log.info("Sorted "+handContainer.getId()+" hand container : " + handContainer);

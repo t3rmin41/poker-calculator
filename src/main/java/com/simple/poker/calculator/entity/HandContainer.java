@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class HandContainer implements Serializable {
 
   private int id;
-  
   private Hand firstPlayerHand;
   private Hand secondPlayerHand;
   private int winner;
@@ -40,10 +39,12 @@ public class HandContainer implements Serializable {
     for (Card card : firstPlayerHand.getCards()) {
       stringified += card.getColor()+card.getRank()+";";
     }
+    stringified += "(repeatable = "+firstPlayerHand.isRepeatable()+")";
     stringified += "] [";
     for (Card card : secondPlayerHand.getCards()) {
       stringified += card.getColor()+card.getRank()+";";
     }
+    stringified += "(repeatable = "+secondPlayerHand.isRepeatable()+")";
     stringified += "]";
     return stringified;
   }
