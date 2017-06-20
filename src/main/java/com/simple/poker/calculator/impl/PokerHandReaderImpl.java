@@ -112,7 +112,7 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
         //log.info("Sent message '" + message.getText() + "'");
         ObjectMessage objectMessage = session.createObjectMessage(handContainer);
         producer.send(objectMessage);
-        log.info("Sent message '" + handContainer + "'");
+        log.info("Sent message #"+handContainer.getId()+" '" + handContainer + "'");
       } catch (JMSException e) {
         log.error(e.getMessage());
       } catch (NullPointerException e) {

@@ -78,13 +78,16 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
           if (message instanceof ObjectMessage) {
             ObjectMessage objectMessage = (ObjectMessage) message;
             HandContainer handContainer = (HandContainer) objectMessage.getObject();
-            log.info("Received message container : " + handContainer);
-            Hand firstHand = calculateHand(handContainer.getFirstPlayerHand());
-            Hand secondHand = calculateHand(handContainer.getSecondPlayerHand());
-            handContainer.setFirstPlayerHand(firstHand);
-            handContainer.setSecondPlayerHand(secondHand);
+            log.info("Received "+handContainer.getId()+" message container : " + handContainer);
+            handContainer.getFirstPlayerHand().arrangeHandByCardRank();
+            handContainer.getSecondPlayerHand().arrangeHandByCardRank();
+            //Hand firstHand = calculateHand(handContainer.getFirstPlayerHand());
+            //Hand secondHand = calculateHand(handContainer.getSecondPlayerHand());
+            //handContainer.setFirstPlayerHand(firstHand);
+            //handContainer.setSecondPlayerHand(secondHand);
+            log.info("Sorted "+handContainer.getId()+" hand container : " + handContainer);
             handContainer.defineWinner();
-            log.info("Hand #"+handContainer.getId()+" wins player #"+handContainer.getWinner());
+            //log.info("Hand #"+handContainer.getId()+" wins player #"+handContainer.getWinner());
           }
         }
       } catch (JMSException e) {
