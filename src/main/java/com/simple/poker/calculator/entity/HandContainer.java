@@ -8,6 +8,7 @@ public class HandContainer implements Serializable {
   private Hand firstPlayerHand;
   private Hand secondPlayerHand;
   private int winner = 0;
+  private boolean finished;
   
   public int getId() {
     return id;
@@ -86,4 +87,11 @@ public class HandContainer implements Serializable {
       }
       return 0;
   }
+  public boolean isFinished() {
+    return finished;
+  }
+  public void setFinished(boolean finished) {
+    this.finished = finished;
+  }
+
 }

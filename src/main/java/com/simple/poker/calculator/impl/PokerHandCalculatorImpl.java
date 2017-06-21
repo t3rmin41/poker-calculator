@@ -14,11 +14,13 @@ import org.apache.activemq.command.ActiveMQTextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.simple.poker.calculator.api.PokerCalculatorEngine;
 import com.simple.poker.calculator.api.PokerHandCalculator;
 import com.simple.poker.calculator.entity.Card;
 import com.simple.poker.calculator.entity.Hand;
 import com.simple.poker.calculator.entity.HandContainer;
 import com.simple.poker.calculator.entity.HandStrength;
+import com.simple.poker.calculator.entity.Stats;
 import com.simple.poker.calculator.main.CalculatorMain;
 
 public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
@@ -29,16 +31,18 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
 
   private static String queue = CalculatorMain.QUEUE;
   
+  private PokerCalculatorEngine engine = new PokerCalculatorEngineImpl();
+
   private Session session;
   
   private MessageConsumer consumer;
 
   @Override
   public Hand calculateHand(Hand hand) {
-    if (isRepeatable(hand)) {
-        calculateRepeatable(hand);
+    if (engine.isRepeatable(hand)) {
+      engine.calculateRepeatable(hand);
     } else {
-        calculateNonRepeatable(hand);
+      engine.calculateNonRepeatable(hand);
     }
     return hand;
   }
@@ -47,76 +51,6 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
   public void run() {
       initiateQueueSession();
       readFromQueue();
-  }
-
-  private boolean isRepeatable(Hand hand) {
-      hand.arrangeHandByCardRank();
-      for (int i = 1; i < hand.getCards().size(); i++) {
-        if (hand.getCards().get(i).getRankFormatted() == hand.getCards().get(0).getRankFormatted()) {
-          return hand.setRepeatable(true).isRepeatable();
-        }
-      }
-      return hand.setRepeatable(false).isRepeatable();
-  }
-  
-  private void calculateRepeatable(Hand hand) {
-      
-  }
-  
-  private void calculateNonRepeatable(Hand hand) {
-      boolean straight = isStraight(hand);
-      boolean flush = isFlush(hand);
-      if (straight && flush) {
-          hand.setStrength(HandStrength.STRAIGHT_FLUSH);
-      } else if (straight) {
-          hand.setStrength(HandStrength.STRAIGHT);
-      } else if (flush) {
-          hand.setStrength(HandStrength.FLUSH);
-      } else {
-          hand.setStrength(HandStrength.HIGH_CARD);
-      }
-  }
-  
-  private boolean isStraight(Hand hand) {
-      if ((hand.getCards().get(0).getRankFormatted() == 2) // special case of "A->5" straight
-         && (hand.getCards().get(1).getRankFormatted() == 3)
-         && (hand.getCards().get(2).getRankFormatted() == 4)
-         && (hand.getCards().get(3).getRankFormatted() == 5)
-         && (hand.getCards().get(4).getRankFormatted() == 14)) {
-         hand.shiftRightByOnePosition();
-         return true;
-      }
-      for (int i = 0; i < hand.getCards().size()-1; i++) {
-          if (((hand.getCards().get(i).getRankFormatted()+1) != hand.getCards().get(i+1).getRankFormatted())) {
-              return false;
-          }
-      }
-      return true;
-  }
-  
-  private boolean isFlush(Hand hand) {
-      for (int i = 1; i < hand.getCards().size(); i++) {
-          if (!hand.getCards().get(0).getColor().equals(hand.getCards().get(i).getColor())) {
-              return false;
-          }
-      }
-      return true;
-  }
-  
-  private boolean isQuads(Hand hand) {
-      return false;
-  }
-  
-  private boolean isFullHouse(Hand hand) {
-      return false;
-  }
-  
-  private boolean isTrips(Hand hand) {
-      return false;
-  }
-  
-  private boolean isTwoPair(Hand hand) {
-      return false;
   }
 
   private void readFromQueue() {
@@ -129,22 +63,20 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
           if (message instanceof ObjectMessage) {
             ObjectMessage objectMessage = (ObjectMessage) message;
             HandContainer handContainer = (HandContainer) objectMessage.getObject();
-            //log.info("Received "+handContainer.getId()+" message container : " + handContainer);
-            //handContainer.getFirstPlayerHand().arrangeHandByCardRank();
-            //handContainer.getSecondPlayerHand().arrangeHandByCardRank();
+            if (handContainer.isFinished()) {
+              break;
+            }
             calculateHand(handContainer.getFirstPlayerHand());
             calculateHand(handContainer.getSecondPlayerHand());
-            //handContainer.setFirstPlayerHand(firstHand);
-            //handContainer.setSecondPlayerHand(secondHand);
             //log.info("Sorted "+handContainer.getId()+" hand container : " + handContainer);
             handContainer.defineWinner();
+            Stats.setOutcome(handContainer.getWinner());
             log.info("Sorted "+handContainer.getId()+" hand container : " + handContainer);
             //log.info("Hand #"+handContainer.getId()+" wins player #"+handContainer.getWinner());
           }
         }
+        log.info("player #1 wins = "+Stats.getFirstPlayerWins()+"; player #2 wins = "+Stats.getSecondPlayerWins()+"; draws = "+Stats.getDraws());
       } catch (JMSException e) {
-        log.error(e.getMessage());
-      } catch (NullPointerException e) {
         log.error(e.getMessage());
       } finally {
         try {

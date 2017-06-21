@@ -64,9 +64,13 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
          container.setFirstPlayerHand(firstPlayerHand);
          container.setSecondPlayerHand(secondPlayerHand);
          container.setId(i);
+         container.setFinished(false);
          putToQueue(container);
          i++;
       }
+      HandContainer container = new HandContainer();
+      container.setFinished(true);
+      putToQueue(container);
     } catch (IOException e) {
       log.error(e.getLocalizedMessage());
     } finally {
