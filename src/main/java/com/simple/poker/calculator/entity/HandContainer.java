@@ -29,7 +29,7 @@ public class HandContainer implements Serializable {
   }
   
   public void defineWinner() {
-
+      winner = returnWinner();
   }
   
   public int getWinner() {
@@ -53,4 +53,37 @@ public class HandContainer implements Serializable {
     return stringified;
   }
   
+  private int returnWinner() {
+      if (firstPlayerHand.getStrength().getRating() != secondPlayerHand.getStrength().getRating()) {
+          return firstPlayerHand.getStrength().getRating() > secondPlayerHand.getStrength().getRating() ? 1 : 2;
+      }
+      if (HandStrength.STRAIGHT_FLUSH.equals(firstPlayerHand.getStrength())) {
+          return 0;
+      }
+      if (HandStrength.QUADS.equals(firstPlayerHand.getStrength())) {
+          return 0;
+      }
+      if (HandStrength.FULL_HOUSE.equals(firstPlayerHand.getStrength())) {
+          return 0;
+      }
+      if (HandStrength.FLUSH.equals(firstPlayerHand.getStrength())) {
+          return 0;
+      }
+      if (HandStrength.STRAIGHT.equals(firstPlayerHand.getStrength())) {
+          return 0;
+      }
+      if (HandStrength.TRIPS.equals(firstPlayerHand.getStrength())) {
+          return 0;
+      }
+      if (HandStrength.TWO_PAIR.equals(firstPlayerHand.getStrength())) {
+          return 0;
+      }
+      if (HandStrength.ONE_PAIR.equals(firstPlayerHand.getStrength())) {
+          return 0;
+      }
+      if (HandStrength.HIGH_CARD.equals(firstPlayerHand.getStrength())) {
+          return 0;
+      }
+      return 0;
+  }
 }
