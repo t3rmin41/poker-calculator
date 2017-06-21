@@ -45,19 +45,7 @@ public class HandContainer implements Serializable {
 
   @Override
   public String toString() {
-    String stringified = "[";
-    for (Card card : firstPlayerHand.getCards()) {
-      stringified += card.getRank()+card.getColor()+";";
-    }
-    stringified += "(repeatable = "+firstPlayerHand.isRepeatable()+";strength="+firstPlayerHand.getStrength()+")";
-
-    stringified += "] [";
-    for (Card card : secondPlayerHand.getCards()) {
-      stringified += card.getRank()+card.getColor()+";";
-    }
-    stringified += "(repeatable = "+secondPlayerHand.isRepeatable()+";strength="+secondPlayerHand.getStrength()+")";
-    stringified += "|winner = "+winner+"]";
-    return stringified;
+    return firstPlayerHand+" "+secondPlayerHand+"|winner = "+winner;
   }
   
   private int returnWinner() {
@@ -83,7 +71,7 @@ public class HandContainer implements Serializable {
                                 return FIRST_PLAYER_ID;
                               }
                               return SECOND_PLAYER_ID;
-        case FLUSH          : return engine.compareFlushKickerRank(firstPlayerHand, secondPlayerHand);
+        case FLUSH          : return engine.compareKickerRank(firstPlayerHand, secondPlayerHand);
         case STRAIGHT       : return firstPlayerHand.getCards().get(4).getRankFormatted() > secondPlayerHand.getCards().get(4).getRankFormatted() ? FIRST_PLAYER_ID : SECOND_PLAYER_ID;
         case TRIPS          : if (engine.getTripsRank(firstPlayerHand) > engine.getTripsRank(secondPlayerHand)) {
                                 return FIRST_PLAYER_ID;
@@ -102,10 +90,18 @@ public class HandContainer implements Serializable {
                                 return FIRST_PLAYER_ID;
                               } else if (engine.getTwoPairLowerPairRank(firstPlayerHand) < engine.getTwoPairLowerPairRank(secondPlayerHand)) {
                                 return SECOND_PLAYER_ID;
+                              } 
+                              int firstPlayerKickerRank = engine.getTwoPairKickerRank(firstPlayerHand);
+                              int secondPlayerKickerRank = engine.getTwoPairKickerRank(secondPlayerHand);
+                              if (firstPlayerKickerRank > secondPlayerKickerRank) {
+                                return FIRST_PLAYER_ID;
+                              } else if (firstPlayerKickerRank < secondPlayerKickerRank) {
+                                return SECOND_PLAYER_ID;
+                              } else {
+                                return 0;
                               }
-                              return engine.compareTwoPairKickerRank(firstPlayerHand, secondPlayerHand);
-        case ONE_PAIR       : 
-        case HIGH_CARD      : 
+        case ONE_PAIR       : return engine.compareOnePairKickerRank(firstPlayerHand, secondPlayerHand);
+        case HIGH_CARD      : return engine.compareKickerRank(firstPlayerHand, secondPlayerHand);
       }
       return 0;
   }

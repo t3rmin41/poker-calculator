@@ -35,10 +35,10 @@ public interface PokerCalculatorEngine {
   int getOnePairRank(Hand hand);
   
   int getQuadsKickerRank(Hand hand);
-
-  int compareFlushKickerRank(Hand firstHand, Hand secondHand);
   
-  int compareTwoPairKickerRank(Hand firstHand, Hand secondHand);
+  int getTwoPairKickerRank(Hand hand);
+
+  int compareKickerRank(Hand firstHand, Hand secondHand);
   
   int compareOnePairKickerRank(Hand firstHand, Hand secondHand);
 

@@ -42,4 +42,15 @@ public class Hand implements Serializable {
   public void shiftRightByOnePosition() {
       Collections.rotate(cards, 1);
   }
+  
+  @Override
+  public String toString() {
+      String stringified = "[";
+      for (Card card : this.getCards()) {
+          stringified += card.getRank()+card.getColor()+";";
+      }
+      stringified += "(repeatable = "+this.isRepeatable()+";strength="+this.getStrength()+")]";
+      return stringified;
+  }
+  
 }

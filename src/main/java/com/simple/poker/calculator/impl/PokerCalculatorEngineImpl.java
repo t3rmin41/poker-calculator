@@ -1,7 +1,13 @@
 package com.simple.poker.calculator.impl;
 
+import java.util.Iterator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.simple.poker.calculator.api.PokerCalculatorEngine;
 import com.simple.poker.calculator.api.PokerHandCalculator;
+import com.simple.poker.calculator.entity.Card;
 import com.simple.poker.calculator.entity.Hand;
 import com.simple.poker.calculator.entity.HandStrength;
 
@@ -150,7 +156,7 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
 
   @Override
   public int getTwoPairLowerPairRank(Hand hand) {
-    return hand.getCards().get(2).getRankFormatted();
+    return hand.getCards().get(1).getRankFormatted();
   }
 
   @Override
@@ -204,7 +210,7 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
   }
 
   @Override
-  public int compareFlushKickerRank(Hand firstHand, Hand secondHand) {
+  public int compareKickerRank(Hand firstHand, Hand secondHand) {
     for (int i = 0; i < PokerHandCalculator.POKER_CARD_COUNT; i++) {
         if (firstHand.getCards().get(i).getRankFormatted() != secondHand.getCards().get(i).getRankFormatted()) {
             return firstHand.getCards().get(i).getRankFormatted() > secondHand.getCards().get(i).getRankFormatted() ? 1 : 2;
@@ -214,14 +220,41 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
   }
 
   @Override
-  public int compareTwoPairKickerRank(Hand firstHand, Hand secondHand) {
-    // TODO Auto-generated method stub
-    return 0;
+  public int getTwoPairKickerRank(Hand hand) {
+      int higherPairRank = getTwoPairHigherPairRank(hand);
+      int lowerPairRank = getTwoPairLowerPairRank(hand);
+      for (Iterator<Card> iterator = hand.getCards().iterator(); iterator.hasNext();) {
+          if (iterator.next().getRankFormatted() == lowerPairRank) {
+              iterator.remove();
+          }
+      }
+      for (Iterator<Card> iterator = hand.getCards().iterator(); iterator.hasNext();) {
+          if (iterator.next().getRankFormatted() == higherPairRank) {
+              iterator.remove();
+          }
+      }
+      return hand.getCards().get(0).getRankFormatted();
   }
 
   @Override
   public int compareOnePairKickerRank(Hand firstHand, Hand secondHand) {
-    // TODO Auto-generated method stub
+    int firstHandPairRank = getOnePairRank(firstHand);
+    for (Iterator<Card> iterator = firstHand.getCards().iterator(); iterator.hasNext();) {
+        if (iterator.next().getRankFormatted() == firstHandPairRank) {
+            iterator.remove();
+        }
+    }
+    int secondHandPairRank = getOnePairRank(secondHand);
+    for (Iterator<Card> iterator = secondHand.getCards().iterator(); iterator.hasNext();) {
+        if (iterator.next().getRankFormatted() == secondHandPairRank) {
+            iterator.remove();
+        }
+    }
+    for (int i = 0; i < 3; i++) {
+        if (firstHand.getCards().get(i).getRankFormatted() != secondHand.getCards().get(i).getRankFormatted()) {
+            return firstHand.getCards().get(i).getRankFormatted() > secondHand.getCards().get(i).getRankFormatted() ? 1 : 2;
+        }
+    }
     return 0;
   }
 
