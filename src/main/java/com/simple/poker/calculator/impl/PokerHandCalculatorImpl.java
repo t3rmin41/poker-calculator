@@ -7,19 +7,15 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.command.ActiveMQTextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.simple.poker.calculator.api.PokerCalculatorEngine;
 import com.simple.poker.calculator.api.PokerHandCalculator;
-import com.simple.poker.calculator.entity.Card;
 import com.simple.poker.calculator.entity.Hand;
 import com.simple.poker.calculator.entity.HandContainer;
-import com.simple.poker.calculator.entity.HandStrength;
 import com.simple.poker.calculator.entity.Stats;
 import com.simple.poker.calculator.main.CalculatorMain;
 
@@ -56,9 +52,6 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
   private void readFromQueue() {
       try {
         while (true) {
-          //ActiveMQTextMessage textMessage = (ActiveMQTextMessage) message;
-          //String text = textMessage.getText();
-          //log.info("Received message with text : " + text);
           Message message = consumer.receive();
           if (message instanceof ObjectMessage) {
             ObjectMessage objectMessage = (ObjectMessage) message;
@@ -68,11 +61,10 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
             }
             calculateHand(handContainer.getFirstPlayerHand());
             calculateHand(handContainer.getSecondPlayerHand());
-            //log.info("Sorted "+handContainer.getId()+" hand container : " + handContainer);
             handContainer.defineWinner();
             Stats.setOutcome(handContainer.getWinner());
-            log.info("Sorted "+handContainer.getId()+" hand container : " + handContainer);
-            //log.info("Hand #"+handContainer.getId()+" wins player #"+handContainer.getWinner());
+            //log.info("Sorted "+handContainer.getId()+" hand container : " + handContainer);
+            log.info("Hand #"+handContainer.getId()+" wins player #"+handContainer.getWinner());
           }
         }
         log.info("player #1 wins = "+Stats.getFirstPlayerWins()+"; player #2 wins = "+Stats.getSecondPlayerWins()+"; draws = "+Stats.getDraws());

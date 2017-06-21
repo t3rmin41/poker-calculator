@@ -10,7 +10,6 @@ import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
@@ -111,15 +110,10 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
   
   private void putToQueue(HandContainer handContainer) {
       try {
-        //TextMessage message = session.createTextMessage("Send message to ActiveMQ!");
-        //producer.send(message);
-        //log.info("Sent message '" + message.getText() + "'");
         ObjectMessage objectMessage = session.createObjectMessage(handContainer);
         producer.send(objectMessage);
         //log.info("Sent message #"+handContainer.getId()+" '" + handContainer + "'");
       } catch (JMSException e) {
-        log.error(e.getMessage());
-      } catch (NullPointerException e) {
         log.error(e.getMessage());
       }
     }

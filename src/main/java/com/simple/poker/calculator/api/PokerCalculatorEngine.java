@@ -14,10 +14,10 @@ public interface PokerCalculatorEngine {
   
   boolean isFlush(Hand hand);
   
-  boolean isQuads(Hand hand);
-  
   boolean isFullHouse(Hand hand);
   
+  int getQuadsRank(Hand hand);
+
   int getTripsRankFormatted(Hand hand);
   
   int getPairCount(Hand hand);
@@ -34,8 +34,8 @@ public interface PokerCalculatorEngine {
   
   int getOnePairRank(Hand hand);
   
-  int compareQuadsKickerRank(Hand firstHand, Hand secondHand);
-  
+  int getQuadsKickerRank(Hand hand);
+
   int compareFlushKickerRank(Hand firstHand, Hand secondHand);
   
   int compareTwoPairKickerRank(Hand firstHand, Hand secondHand);

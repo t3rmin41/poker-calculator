@@ -22,7 +22,7 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
 
   @Override
   public void calculateRepeatable(Hand hand) {
-    if (isQuads(hand)) {
+    if (0 != getQuadsRank(hand)) {
       hand.setStrength(HandStrength.QUADS);
     } else if (isFullHouse(hand)) {
       hand.setStrength(HandStrength.FULL_HOUSE);
@@ -79,16 +79,17 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
   }
 
   @Override
-  public boolean isQuads(Hand hand) {
+  public int getQuadsRank(Hand hand) {
+    int quadsRank = 0;
     if ((hand.getCards().get(1).getRankFormatted() == hand.getCards().get(2).getRankFormatted())
         && (hand.getCards().get(1).getRankFormatted() == hand.getCards().get(3).getRankFormatted())
         ) {
           if ((hand.getCards().get(1).getRankFormatted() == hand.getCards().get(0).getRankFormatted())
               || (hand.getCards().get(1).getRankFormatted() == hand.getCards().get(4).getRankFormatted())) {
-              return true;
+              quadsRank = hand.getCards().get(1).getRankFormatted();
           }
     }
-    return false;
+    return quadsRank;
   }
 
   @Override
@@ -154,14 +155,52 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
 
   @Override
   public int getOnePairRank(Hand hand) {
-    // TODO Auto-generated method stub
-    return 0;
+    int rank = 0;
+    if (0 == getTripsRankFormatted(hand)) {
+      for (int i = 0; i < PokerHandCalculator.POKER_CARD_COUNT; i++) {
+        for (int j = i+1; j < PokerHandCalculator.POKER_CARD_COUNT; j++) {
+          if (hand.getCards().get(i).getRankFormatted() == hand.getCards().get(j).getRankFormatted()) {
+            rank = hand.getCards().get(i).getRankFormatted();
+          }
+        }
+      }
+    }
+    return rank;
   }
 
   @Override
-  public int compareQuadsKickerRank(Hand firstHand, Hand secondHand) {
-    // TODO Auto-generated method stub
-    return 0;
+  public int getTripsHigherKickerRank(Hand hand) {
+    int rank = 0;
+    if (hand.getCards().get(2).getRankFormatted() != hand.getCards().get(PokerHandCalculator.POKER_CARD_COUNT-1).getRankFormatted()) {
+      rank = hand.getCards().get(PokerHandCalculator.POKER_CARD_COUNT-1).getRankFormatted();
+    } else {
+      rank = hand.getCards().get(1).getRankFormatted();
+    }
+    return rank;
+  }
+
+  @Override
+  public int getTripsLowerKickerRank(Hand hand) {
+    int rank = 0;
+    if (hand.getCards().get(2).getRankFormatted() != hand.getCards().get(PokerHandCalculator.POKER_CARD_COUNT-1).getRankFormatted()) {
+      if (hand.getCards().get(2).getRankFormatted() != hand.getCards().get(0).getRankFormatted()) {
+        rank = hand.getCards().get(0).getRankFormatted();
+      } else {
+        rank = hand.getCards().get(3).getRankFormatted();
+      }
+    } else {
+      rank = hand.getCards().get(0).getRankFormatted();
+    }
+    return rank;
+  }
+  
+  @Override
+  public int getQuadsKickerRank(Hand hand) {
+    if (hand.getCards().get(2).getRankFormatted() == hand.getCards().get(0).getRankFormatted()) {
+      return hand.getCards().get(4).getRankFormatted();
+    } else {
+      return hand.getCards().get(0).getRankFormatted();
+    }
   }
 
   @Override
@@ -178,18 +217,6 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
 
   @Override
   public int compareOnePairKickerRank(Hand firstHand, Hand secondHand) {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  @Override
-  public int getTripsHigherKickerRank(Hand hand) {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  @Override
-  public int getTripsLowerKickerRank(Hand hand) {
     // TODO Auto-generated method stub
     return 0;
   }

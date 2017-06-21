@@ -2,6 +2,9 @@ package com.simple.poker.calculator.entity;
 
 import java.io.Serializable;
 
+import com.simple.poker.calculator.api.PokerCalculatorEngine;
+import com.simple.poker.calculator.impl.PokerCalculatorEngineImpl;
+
 public class HandContainer implements Serializable {
 
   private int id;
@@ -58,35 +61,37 @@ public class HandContainer implements Serializable {
       if (firstPlayerHand.getStrength().getRating() != secondPlayerHand.getStrength().getRating()) {
           return firstPlayerHand.getStrength().getRating() > secondPlayerHand.getStrength().getRating() ? 1 : 2;
       }
-      if (HandStrength.STRAIGHT_FLUSH.equals(firstPlayerHand.getStrength())) {
-          return firstPlayerHand.getCards().get(4).getRankFormatted() > secondPlayerHand.getCards().get(4).getRankFormatted() ? 1 : 2;
-      }
-      if (HandStrength.QUADS.equals(firstPlayerHand.getStrength())) {
-          return 0;
-      }
-      if (HandStrength.FULL_HOUSE.equals(firstPlayerHand.getStrength())) {
-          return 0;
-      }
-      if (HandStrength.FLUSH.equals(firstPlayerHand.getStrength())) {
-          return 0;
-      }
-      if (HandStrength.STRAIGHT.equals(firstPlayerHand.getStrength())) {
-          return firstPlayerHand.getCards().get(4).getRankFormatted() > secondPlayerHand.getCards().get(4).getRankFormatted() ? 1 : 2;
-      }
-      if (HandStrength.TRIPS.equals(firstPlayerHand.getStrength())) {
-          return 0;
-      }
-      if (HandStrength.TWO_PAIR.equals(firstPlayerHand.getStrength())) {
-          return 0;
-      }
-      if (HandStrength.ONE_PAIR.equals(firstPlayerHand.getStrength())) {
-          return 0;
-      }
-      if (HandStrength.HIGH_CARD.equals(firstPlayerHand.getStrength())) {
-          return 0;
+      PokerCalculatorEngine engine = new PokerCalculatorEngineImpl();
+      switch (firstPlayerHand.getStrength()) {
+        case STRAIGHT_FLUSH :    return firstPlayerHand.getCards().get(4).getRankFormatted() > secondPlayerHand.getCards().get(4).getRankFormatted() ? 1 : 2;
+        case QUADS          : if (engine.getQuadsRank(firstPlayerHand) > engine.getQuadsRank(secondPlayerHand)) {
+                                 return 1;
+                              } else if (engine.getQuadsRank(firstPlayerHand) < engine.getQuadsRank(secondPlayerHand)) {
+                                return 2;
+                              } else if (engine.getQuadsKickerRank(firstPlayerHand) > engine.getQuadsKickerRank(secondPlayerHand)) {
+                                return 1;
+                              }
+                              return 2;
+        case FULL_HOUSE     : 
+        case FLUSH          : 
+        case STRAIGHT       : return firstPlayerHand.getCards().get(4).getRankFormatted() > secondPlayerHand.getCards().get(4).getRankFormatted() ? 1 : 2;
+        case TRIPS          : 
+        case TWO_PAIR       : if (engine.getTwoPairHigherPairRank(firstPlayerHand) > engine.getTwoPairHigherPairRank(secondPlayerHand)) {
+                                return 1;
+                              } else if (engine.getTwoPairHigherPairRank(firstPlayerHand) < engine.getTwoPairHigherPairRank(secondPlayerHand)) {
+                                return 2;
+                              } else if (engine.getTwoPairLowerPairRank(firstPlayerHand) > engine.getTwoPairLowerPairRank(secondPlayerHand)) {
+                                return 1;
+                              } else if (engine.getTwoPairLowerPairRank(firstPlayerHand) < engine.getTwoPairLowerPairRank(secondPlayerHand)) {
+                                return 2;
+                              }
+                              return engine.compareTwoPairKickerRank(firstPlayerHand, secondPlayerHand);
+        case ONE_PAIR       :
+        case HIGH_CARD      :
       }
       return 0;
   }
+
   public boolean isFinished() {
     return finished;
   }
