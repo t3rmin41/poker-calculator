@@ -24,6 +24,10 @@ public interface PokerCalculatorEngine {
   
   int getFullHousePairRank(Hand hand);
   
+  int getTripsHigherKickerRank(Hand hand);
+  
+  int getTripsLowerKickerRank(Hand hand);
+  
   int getTwoPairHigherPairRank(Hand hand);
   
   int getTwoPairLowerPairRank(Hand hand);

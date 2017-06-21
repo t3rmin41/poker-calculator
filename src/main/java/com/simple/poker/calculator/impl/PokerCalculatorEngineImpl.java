@@ -144,14 +144,12 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
 
   @Override
   public int getTwoPairHigherPairRank(Hand hand) {
-    // TODO Auto-generated method stub
-    return 0;
+    return hand.getCards().get(3).getRankFormatted();
   }
 
   @Override
   public int getTwoPairLowerPairRank(Hand hand) {
-    // TODO Auto-generated method stub
-    return 0;
+    return hand.getCards().get(2).getRankFormatted();
   }
 
   @Override
@@ -180,6 +178,18 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
 
   @Override
   public int compareOnePairKickerRank(Hand firstHand, Hand secondHand) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public int getTripsHigherKickerRank(Hand hand) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public int getTripsLowerKickerRank(Hand hand) {
     // TODO Auto-generated method stub
     return 0;
   }
