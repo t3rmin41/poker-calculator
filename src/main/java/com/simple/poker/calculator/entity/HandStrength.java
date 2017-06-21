@@ -12,14 +12,14 @@ public enum HandStrength {
   ONE_PAIR(1),
   HIGH_CARD(0);
   
-  private int strength;
+  private int rating;
   
-  private HandStrength(int strength) {
-    this.strength = strength;
+  private HandStrength(int rating) {
+    this.rating = rating;
   }
   
-  public int getStrength() {
-    return this.strength;
+  public int getRating() {
+    return this.rating;
   }
   
 }

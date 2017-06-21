@@ -7,7 +7,7 @@ public class HandContainer implements Serializable {
   private int id;
   private Hand firstPlayerHand;
   private Hand secondPlayerHand;
-  private int winner;
+  private int winner = 0;
   
   public int getId() {
     return id;
@@ -27,12 +27,15 @@ public class HandContainer implements Serializable {
   public void setSecondPlayerHand(Hand secondPlayerHand) {
     this.secondPlayerHand = secondPlayerHand;
   }
+  
   public void defineWinner() {
-      
+
   }
+  
   public int getWinner() {
       return winner;
   }
+
   @Override
   public String toString() {
     String stringified = "[";
@@ -46,7 +49,8 @@ public class HandContainer implements Serializable {
       stringified += card.getRank()+card.getColor()+";";
     }
     stringified += "(repeatable = "+secondPlayerHand.isRepeatable()+";strength="+secondPlayerHand.getStrength()+")";
-    stringified += "]";
+    stringified += "|winner = "+winner+"]";
     return stringified;
   }
+  
 }
