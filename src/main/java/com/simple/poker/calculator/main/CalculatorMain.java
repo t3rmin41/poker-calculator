@@ -36,8 +36,8 @@ public class CalculatorMain {
     if (args.length > 0) {
         pokerReader.setDatasourceFile(args[0]);
     } else {
-        pokerReader.setDatasourceFile("./src/main/data/poker_test.txt");
-        //pokerReader.setDatasourceFile("./src/main/data/poker.txt");
+        //pokerReader.setDatasourceFile("./src/main/data/poker_test.txt");
+        pokerReader.setDatasourceFile("./src/main/data/poker.txt");
     }
     
     Thread readerThread = new Thread(pokerReader);
