@@ -18,7 +18,7 @@ public interface PokerCalculatorEngine {
   
   int getQuadsRank(Hand hand);
 
-  int getTripsRankFormatted(Hand hand);
+  int getTripsRank(Hand hand);
   
   int getPairCount(Hand hand);
   

@@ -26,7 +26,7 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
       hand.setStrength(HandStrength.QUADS);
     } else if (isFullHouse(hand)) {
       hand.setStrength(HandStrength.FULL_HOUSE);
-    } else if (0 != getTripsRankFormatted(hand)) {
+    } else if (0 != getTripsRank(hand)) {
       hand.setStrength(HandStrength.TRIPS);
     } else if (2 == getPairCount(hand)) {
       hand.setStrength(HandStrength.TWO_PAIR);
@@ -94,7 +94,7 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
 
   @Override
   public boolean isFullHouse(Hand hand) {
-    if (0 != getTripsRankFormatted(hand)) {
+    if (0 != getTripsRank(hand)) {
       if ((hand.getCards().get(0).getRankFormatted() == hand.getCards().get(1).getRankFormatted() && (hand.getCards().get(0).getRankFormatted() != hand.getCards().get(2).getRankFormatted()))
           || (hand.getCards().get(4).getRankFormatted() == hand.getCards().get(3).getRankFormatted()) && (hand.getCards().get(4).getRankFormatted() != hand.getCards().get(2).getRankFormatted()) ) {
         return true;
@@ -104,7 +104,7 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
   }
 
   @Override
-  public int getTripsRankFormatted(Hand hand) {
+  public int getTripsRank(Hand hand) {
     int tripsRank = 0;
     if ((hand.getCards().get(2).getRankFormatted() == hand.getCards().get(3).getRankFormatted())
         && (hand.getCards().get(2).getRankFormatted() == hand.getCards().get(4).getRankFormatted())) {
@@ -120,7 +120,7 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
   @Override
   public int getPairCount(Hand hand) {
     int count = 0;
-    if (0 == getTripsRankFormatted(hand)) {
+    if (0 == getTripsRank(hand)) {
       for (int i = 0; i < PokerHandCalculator.POKER_CARD_COUNT; i++) {
         for (int j = i+1; j < PokerHandCalculator.POKER_CARD_COUNT; j++) {
           if (hand.getCards().get(i).getRankFormatted() == hand.getCards().get(j).getRankFormatted()) {
@@ -156,7 +156,7 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
   @Override
   public int getOnePairRank(Hand hand) {
     int rank = 0;
-    if (0 == getTripsRankFormatted(hand)) {
+    if (0 == getTripsRank(hand)) {
       for (int i = 0; i < PokerHandCalculator.POKER_CARD_COUNT; i++) {
         for (int j = i+1; j < PokerHandCalculator.POKER_CARD_COUNT; j++) {
           if (hand.getCards().get(i).getRankFormatted() == hand.getCards().get(j).getRankFormatted()) {
