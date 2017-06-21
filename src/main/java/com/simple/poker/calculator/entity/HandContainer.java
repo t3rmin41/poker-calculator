@@ -83,7 +83,7 @@ public class HandContainer implements Serializable {
                                 return FIRST_PLAYER_ID;
                               }
                               return SECOND_PLAYER_ID;
-        case FLUSH          : 
+        case FLUSH          : return engine.compareFlushKickerRank(firstPlayerHand, secondPlayerHand);
         case STRAIGHT       : return firstPlayerHand.getCards().get(4).getRankFormatted() > secondPlayerHand.getCards().get(4).getRankFormatted() ? FIRST_PLAYER_ID : SECOND_PLAYER_ID;
         case TRIPS          : if (engine.getTripsRank(firstPlayerHand) > engine.getTripsRank(secondPlayerHand)) {
                                 return FIRST_PLAYER_ID;

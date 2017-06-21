@@ -63,7 +63,7 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
             calculateHand(handContainer.getSecondPlayerHand());
             handContainer.defineWinner();
             Stats.setOutcome(handContainer.getWinner());
-            //log.info("Sorted "+handContainer.getId()+" hand container : " + handContainer);
+            log.info("Sorted "+handContainer.getId()+" hand container : " + handContainer);
             log.info("Hand #"+handContainer.getId()+" wins player #"+handContainer.getWinner());
           }
         }

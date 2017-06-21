@@ -205,7 +205,11 @@ public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
 
   @Override
   public int compareFlushKickerRank(Hand firstHand, Hand secondHand) {
-    // TODO Auto-generated method stub
+    for (int i = 0; i < PokerHandCalculator.POKER_CARD_COUNT; i++) {
+        if (firstHand.getCards().get(i).getRankFormatted() != secondHand.getCards().get(i).getRankFormatted()) {
+            return firstHand.getCards().get(i).getRankFormatted() > secondHand.getCards().get(i).getRankFormatted() ? 1 : 2;
+        }
+    }
     return 0;
   }
 
