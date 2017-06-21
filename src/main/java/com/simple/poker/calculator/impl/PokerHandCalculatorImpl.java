@@ -78,13 +78,19 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
   }
   
   private boolean isStraight(Hand hand) {
-      for (int i = 1; i < hand.getCards().size(); i++) {
-          if (((hand.getCards().get(i-1).getRankFormatted()+1) != hand.getCards().get(i).getRankFormatted())
-               && !"A".equals(hand.getCards().get(4).getRank())) { // special case for "A-5" straight
+      if ((hand.getCards().get(0).getRankFormatted() == 2) // special case of "A->5" straight
+         && (hand.getCards().get(1).getRankFormatted() == 3)
+         && (hand.getCards().get(2).getRankFormatted() == 4)
+         && (hand.getCards().get(3).getRankFormatted() == 5)
+         && (hand.getCards().get(4).getRankFormatted() == 14)) {
+         hand.shiftRightByOnePosition();
+         return true;
+      }
+      for (int i = 0; i < hand.getCards().size()-1; i++) {
+          if (((hand.getCards().get(i).getRankFormatted()+1) != hand.getCards().get(i+1).getRankFormatted())) {
               return false;
           }
       }
-      hand.shiftRightByOnePosition();
       return true;
   }
   

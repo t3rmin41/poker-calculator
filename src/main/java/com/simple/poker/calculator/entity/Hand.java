@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Hand implements Serializable {
 
-  private HandStrength strength;
+  private HandStrength strength = HandStrength.HIGH_CARD;
   private boolean isRepeatable = false;
   
   private List<Card> cards = new ArrayList<Card>();

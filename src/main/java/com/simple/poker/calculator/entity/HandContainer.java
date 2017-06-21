@@ -58,7 +58,7 @@ public class HandContainer implements Serializable {
           return firstPlayerHand.getStrength().getRating() > secondPlayerHand.getStrength().getRating() ? 1 : 2;
       }
       if (HandStrength.STRAIGHT_FLUSH.equals(firstPlayerHand.getStrength())) {
-          return 0;
+          return firstPlayerHand.getCards().get(4).getRankFormatted() > secondPlayerHand.getCards().get(4).getRankFormatted() ? 1 : 2;
       }
       if (HandStrength.QUADS.equals(firstPlayerHand.getStrength())) {
           return 0;
@@ -70,7 +70,7 @@ public class HandContainer implements Serializable {
           return 0;
       }
       if (HandStrength.STRAIGHT.equals(firstPlayerHand.getStrength())) {
-          return 0;
+          return firstPlayerHand.getCards().get(4).getRankFormatted() > secondPlayerHand.getCards().get(4).getRankFormatted() ? 1 : 2;
       }
       if (HandStrength.TRIPS.equals(firstPlayerHand.getStrength())) {
           return 0;
