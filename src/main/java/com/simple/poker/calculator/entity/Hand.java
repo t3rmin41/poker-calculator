@@ -12,6 +12,15 @@ public class Hand implements Serializable {
   
   private List<Card> cards = new ArrayList<Card>();
 
+  public HandStrength getStrength() {
+    return strength;
+  }
+
+  public Hand setStrength(HandStrength strength) {
+    this.strength = strength;
+    return this;
+  }
+
   public void arrangeHandByCardRank() {
     // arrange hand by card's formatted rank
     Collections.sort(cards);
@@ -30,5 +39,7 @@ public class Hand implements Serializable {
     return this;
   }
 
-
+  public void shiftRightByOnePosition() {
+      Collections.rotate(cards, 1);
+  }
 }

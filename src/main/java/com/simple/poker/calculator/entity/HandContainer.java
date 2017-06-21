@@ -37,15 +37,15 @@ public class HandContainer implements Serializable {
   public String toString() {
     String stringified = "[";
     for (Card card : firstPlayerHand.getCards()) {
-      stringified += card.getColor()+card.getRank()+";";
+      stringified += card.getRank()+card.getColor()+";";
     }
-    stringified += "(repeatable = "+firstPlayerHand.isRepeatable()+")";
+    stringified += "(repeatable = "+firstPlayerHand.isRepeatable()+";strength="+firstPlayerHand.getStrength()+")";
 
     stringified += "] [";
     for (Card card : secondPlayerHand.getCards()) {
-      stringified += card.getColor()+card.getRank()+";";
+      stringified += card.getRank()+card.getColor()+";";
     }
-    stringified += "(repeatable = "+secondPlayerHand.isRepeatable()+")";
+    stringified += "(repeatable = "+secondPlayerHand.isRepeatable()+";strength="+secondPlayerHand.getStrength()+")";
     stringified += "]";
     return stringified;
   }

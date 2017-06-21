@@ -18,6 +18,7 @@ import com.simple.poker.calculator.api.PokerHandCalculator;
 import com.simple.poker.calculator.entity.Card;
 import com.simple.poker.calculator.entity.Hand;
 import com.simple.poker.calculator.entity.HandContainer;
+import com.simple.poker.calculator.entity.HandStrength;
 import com.simple.poker.calculator.main.CalculatorMain;
 
 public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
@@ -63,9 +64,55 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
   }
   
   private void calculateNonRepeatable(Hand hand) {
-      
+      boolean straight = isStraight(hand);
+      boolean flush = isFlush(hand);
+      if (straight && flush) {
+          hand.setStrength(HandStrength.STRAIGHT_FLUSH);
+      } else if (straight) {
+          hand.setStrength(HandStrength.STRAIGHT);
+      } else if (flush) {
+          hand.setStrength(HandStrength.FLUSH);
+      } else {
+          hand.setStrength(HandStrength.HIGH_CARD);
+      }
   }
   
+  private boolean isStraight(Hand hand) {
+      for (int i = 1; i < hand.getCards().size(); i++) {
+          if (((hand.getCards().get(i-1).getRankFormatted()+1) != hand.getCards().get(i).getRankFormatted())
+               && !"A".equals(hand.getCards().get(4).getRank())) { // special case for "A-5" straight
+              return false;
+          }
+      }
+      hand.shiftRightByOnePosition();
+      return true;
+  }
+  
+  private boolean isFlush(Hand hand) {
+      for (int i = 1; i < hand.getCards().size(); i++) {
+          if (!hand.getCards().get(0).getColor().equals(hand.getCards().get(i).getColor())) {
+              return false;
+          }
+      }
+      return true;
+  }
+  
+  private boolean isQuads(Hand hand) {
+      return false;
+  }
+  
+  private boolean isFullHouse(Hand hand) {
+      return false;
+  }
+  
+  private boolean isTrips(Hand hand) {
+      return false;
+  }
+  
+  private boolean isTwoPair(Hand hand) {
+      return false;
+  }
+
   private void readFromQueue() {
       try {
         while (true) {
