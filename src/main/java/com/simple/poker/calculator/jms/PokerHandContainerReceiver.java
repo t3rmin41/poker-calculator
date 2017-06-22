@@ -18,9 +18,9 @@ import com.simple.poker.calculator.entity.Stats;
 import com.simple.poker.calculator.impl.PokerCalculatorImpl;
 import com.simple.poker.calculator.main.CalculatorMain;
 
-public class PokerHandContainerReciever implements Runnable {
+public class PokerHandContainerReceiver implements Runnable {
 
-  private static final Logger log = LoggerFactory.getLogger(PokerHandContainerReciever.class);
+  private static final Logger log = LoggerFactory.getLogger(PokerHandContainerReceiver.class);
   
   private static String URL = CalculatorMain.URL;
 

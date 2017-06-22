@@ -7,7 +7,7 @@ import org.apache.activemq.broker.TransportConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.simple.poker.calculator.jms.PokerHandContainerReciever;
+import com.simple.poker.calculator.jms.PokerHandContainerReceiver;
 import com.simple.poker.calculator.jms.PokerHandReader;
 
 public class CalculatorMain {
@@ -30,7 +30,7 @@ public class CalculatorMain {
     broker.setUseJmx(false);
     broker.start();
 
-    PokerHandContainerReciever reciever = new PokerHandContainerReciever();
+    PokerHandContainerReceiver receiver = new PokerHandContainerReceiver();
     PokerHandReader handReader = new PokerHandReader();
 
     if (args.length > 0) {
@@ -42,11 +42,11 @@ public class CalculatorMain {
     
     Thread readerThread = new Thread(handReader);
     readerThread.setName("PokerHandReader");
-    Thread recieverThread = new Thread(reciever);
-    recieverThread.setName("PokerHandCalculator");
+    Thread receiverThread = new Thread(receiver);
+    receiverThread.setName("PokerHandReciever");
 
     readerThread.start();
-    recieverThread.start();
+    receiverThread.start();
   }
 
 }
