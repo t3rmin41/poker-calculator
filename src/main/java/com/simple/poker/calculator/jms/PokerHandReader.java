@@ -1,4 +1,4 @@
-package com.simple.poker.calculator.impl;
+package com.simple.poker.calculator.jms;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,15 +15,14 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.simple.poker.calculator.api.PokerHandReader;
 import com.simple.poker.calculator.entity.Card;
 import com.simple.poker.calculator.entity.Hand;
 import com.simple.poker.calculator.entity.HandContainer;
 import com.simple.poker.calculator.main.CalculatorMain;
 
-public class PokerHandReaderImpl implements PokerHandReader, Runnable {
+public class PokerHandReader implements Runnable {
 
-  private static final Logger log = LoggerFactory.getLogger(PokerHandReaderImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(PokerHandReader.class);
 
   private static final String URL = CalculatorMain.URL;
 
@@ -34,57 +33,9 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
   private MessageProducer producer;
   
   private Session session;
-  
-  @Override
+
   public void setDatasourceFile(String path) {
     this.datasourceFilePath = path;
-  }
-
-  @Override
-  public void readCards() {
-    BufferedReader br = null;
-    try {
-      br = new BufferedReader(new FileReader(datasourceFilePath));
-      String line;
-      int i = 1;
-      while ((line = br.readLine()) != null) {
-         String first = line.substring(0, 14);
-         String second = line.substring(15, 29);
-         String[] firstArr = first.split(" ");
-         String[] secondArr = second.split(" ");
-         Hand firstPlayerHand = new Hand();
-         Hand secondPlayerHand = new Hand();
-         
-         for (int j = 0; j < 5; j++) {
-           firstPlayerHand.getCards().add(j, new Card(firstArr[j]));
-           secondPlayerHand.getCards().add(j, new Card(secondArr[j]));
-         }
-         HandContainer container = new HandContainer();
-         container.setFirstPlayerHand(firstPlayerHand);
-         container.setSecondPlayerHand(secondPlayerHand);
-         container.setId(i);
-         container.setFinished(false);
-         putToQueue(container);
-         i++;
-      }
-      HandContainer container = new HandContainer();
-      container.setFinished(true);
-      putToQueue(container);
-    } catch (IOException e) {
-      log.error(e.getLocalizedMessage());
-    } finally {
-      try {
-        br.close();
-      } catch (IOException e) {
-        log.error(e.getLocalizedMessage());
-      }
-    }
-    //close queue session when done
-    try {
-        session.close();
-    } catch (JMSException e) {
-        log.error(e.getLocalizedMessage());
-    }
   }
 
   @Override
@@ -107,6 +58,52 @@ public class PokerHandReaderImpl implements PokerHandReader, Runnable {
           log.error(e.getMessage());
         }
   }
+  
+  private void readCards() {
+      BufferedReader br = null;
+      try {
+        br = new BufferedReader(new FileReader(datasourceFilePath));
+        String line;
+        int i = 1;
+        while ((line = br.readLine()) != null) {
+           String first = line.substring(0, 14);
+           String second = line.substring(15, 29);
+           String[] firstArr = first.split(" ");
+           String[] secondArr = second.split(" ");
+           Hand firstPlayerHand = new Hand();
+           Hand secondPlayerHand = new Hand();
+           
+           for (int j = 0; j < 5; j++) {
+             firstPlayerHand.getCards().add(j, new Card(firstArr[j]));
+             secondPlayerHand.getCards().add(j, new Card(secondArr[j]));
+           }
+           HandContainer container = new HandContainer();
+           container.setFirstPlayerHand(firstPlayerHand);
+           container.setSecondPlayerHand(secondPlayerHand);
+           container.setId(i);
+           container.setFinished(false);
+           putToQueue(container);
+           i++;
+        }
+        HandContainer container = new HandContainer();
+        container.setFinished(true);
+        putToQueue(container);
+      } catch (IOException e) {
+        log.error(e.getLocalizedMessage());
+      } finally {
+        try {
+          br.close();
+        } catch (IOException e) {
+          log.error(e.getLocalizedMessage());
+        }
+      }
+      //close queue session when done
+      try {
+          session.close();
+      } catch (JMSException e) {
+          log.error(e.getLocalizedMessage());
+      }
+    }
   
   private void putToQueue(HandContainer handContainer) {
       try {

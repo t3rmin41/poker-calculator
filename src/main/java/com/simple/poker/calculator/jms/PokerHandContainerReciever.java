@@ -1,4 +1,4 @@
-package com.simple.poker.calculator.impl;
+package com.simple.poker.calculator.jms;
 
 import javax.jms.Connection;
 import javax.jms.Destination;
@@ -12,36 +12,25 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.simple.poker.calculator.api.PokerCalculatorEngine;
-import com.simple.poker.calculator.api.PokerHandCalculator;
-import com.simple.poker.calculator.entity.Hand;
+import com.simple.poker.calculator.api.PokerCalculator;
 import com.simple.poker.calculator.entity.HandContainer;
 import com.simple.poker.calculator.entity.Stats;
+import com.simple.poker.calculator.impl.PokerCalculatorImpl;
 import com.simple.poker.calculator.main.CalculatorMain;
 
-public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
+public class PokerHandContainerReciever implements Runnable {
 
-  private static final Logger log = LoggerFactory.getLogger(PokerHandCalculatorImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(PokerHandContainerReciever.class);
   
-  private static String url = CalculatorMain.URL;
+  private static String URL = CalculatorMain.URL;
 
-  private static String queue = CalculatorMain.QUEUE;
+  private static String QUEUE = CalculatorMain.QUEUE;
   
-  private PokerCalculatorEngine engine = new PokerCalculatorEngineImpl();
+  private PokerCalculator calc = new PokerCalculatorImpl();
 
   private Session session;
   
   private MessageConsumer consumer;
-
-  @Override
-  public Hand calculateHand(Hand hand) {
-    if (engine.isRepeatable(hand)) {
-      engine.calculateRepeatable(hand);
-    } else {
-      engine.calculateNonRepeatable(hand);
-    }
-    return hand;
-  }
 
   @Override
   public void run() {
@@ -61,9 +50,9 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
             }
             //calculateHand(handContainer.getFirstPlayerHand());
             //calculateHand(handContainer.getSecondPlayerHand());
-            //handContainer.defineWinner();
+            handContainer.setWinner(calc.returnWinner(handContainer.getFirstPlayerHand(), handContainer.getSecondPlayerHand()));
             //engine.returnWinner(handContainer.getFirstPlayerHand(), handContainer.getSecondPlayerHand());
-            Stats.setOutcome(engine.returnWinner(handContainer.getFirstPlayerHand(), handContainer.getSecondPlayerHand()));
+            Stats.setOutcome(handContainer.getWinner());
             //log.info("Sorted "+handContainer.getId()+" hand container : " + handContainer);
             //log.info("Hand #"+handContainer.getId()+" wins player #"+handContainer.getWinner());
           }
@@ -82,11 +71,11 @@ public class PokerHandCalculatorImpl implements PokerHandCalculator, Runnable {
   
   private void initiateQueueSession() {
       try {
-          ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
+          ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(URL);
           Connection connection = connectionFactory.createConnection();
           connection.start();
           session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-          Destination destination = session.createQueue(queue);
+          Destination destination = session.createQueue(QUEUE);
           consumer = session.createConsumer(destination);
       } catch (JMSException e) {
           log.error(e.getMessage());

@@ -2,12 +2,12 @@ package com.simple.poker.calculator.impl;
 
 import java.util.Iterator;
 
-import com.simple.poker.calculator.api.PokerCalculatorEngine;
+import com.simple.poker.calculator.api.PokerCalculator;
 import com.simple.poker.calculator.entity.Card;
 import com.simple.poker.calculator.entity.Hand;
 import com.simple.poker.calculator.entity.HandStrength;
 
-public class PokerCalculatorEngineImpl implements PokerCalculatorEngine {
+public class PokerCalculatorImpl implements PokerCalculator {
 
   @Override
   public Hand calculateHand(Hand hand) {

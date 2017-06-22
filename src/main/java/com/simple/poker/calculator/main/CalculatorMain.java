@@ -7,8 +7,8 @@ import org.apache.activemq.broker.TransportConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.simple.poker.calculator.impl.PokerHandCalculatorImpl;
-import com.simple.poker.calculator.impl.PokerHandReaderImpl;
+import com.simple.poker.calculator.jms.PokerHandContainerReciever;
+import com.simple.poker.calculator.jms.PokerHandReader;
 
 public class CalculatorMain {
 
@@ -30,23 +30,23 @@ public class CalculatorMain {
     broker.setUseJmx(false);
     broker.start();
 
-    PokerHandCalculatorImpl pokerCalc = new PokerHandCalculatorImpl();
-    PokerHandReaderImpl pokerReader = new PokerHandReaderImpl();
+    PokerHandContainerReciever reciever = new PokerHandContainerReciever();
+    PokerHandReader handReader = new PokerHandReader();
 
     if (args.length > 0) {
-        pokerReader.setDatasourceFile(args[0]);
+        handReader.setDatasourceFile(args[0]);
     } else {
         //pokerReader.setDatasourceFile("./src/main/data/poker_test.txt");
-        pokerReader.setDatasourceFile("./src/main/data/poker.txt");
+        handReader.setDatasourceFile("./src/main/data/poker.txt");
     }
     
-    Thread readerThread = new Thread(pokerReader);
+    Thread readerThread = new Thread(handReader);
     readerThread.setName("PokerHandReader");
-    Thread calcThread = new Thread(pokerCalc);
-    calcThread.setName("PokerHandCalculator");
+    Thread recieverThread = new Thread(reciever);
+    recieverThread.setName("PokerHandCalculator");
 
     readerThread.start();
-    calcThread.start();
+    recieverThread.start();
   }
 
 }

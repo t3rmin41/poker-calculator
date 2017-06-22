@@ -2,7 +2,7 @@ package com.simple.poker.calculator.api;
 
 import com.simple.poker.calculator.entity.Hand;
 
-public interface PokerCalculatorEngine {
+public interface PokerCalculator {
 
   public final int POKER_CARD_COUNT = 5;
 

@@ -2,23 +2,18 @@ package com.simple.poker.calculator.entity;
 
 import java.io.Serializable;
 
-import com.simple.poker.calculator.api.PokerCalculatorEngine;
-import com.simple.poker.calculator.impl.PokerCalculatorEngineImpl;
+import com.simple.poker.calculator.api.PokerCalculator;
 
 public class HandContainer implements Serializable {
 
-  private static final int FIRST_PLAYER_ID = 1;
-  private static final int SECOND_PLAYER_ID = 2;
-  
   private int id;
   private Hand firstPlayerHand = new Hand();
   private Hand secondPlayerHand = new Hand();
-  private int winner = 0;
+  private int winner = PokerCalculator.DRAW_ID;
   private boolean finished;
-  //private PokerCalculatorEngine engine = new PokerCalculatorEngineImpl();
   
   public int getId() {
-    return id;
+    return this.id;
   }
   public void setId(int id) {
     this.id = id;
@@ -36,13 +31,26 @@ public class HandContainer implements Serializable {
     this.secondPlayerHand = secondPlayerHand;
   }
 
-
+  public int getWinner() {
+      return this.winner;
+  }
+  
+  public void setWinner(int winner) {
+      this.winner = winner;
+  }
+  
+  public boolean isFinished() {
+      return finished;
+  }
+  public void setFinished(boolean finished) {
+      this.finished = finished;
+  }
 
   @Override
   public String toString() {
     return firstPlayerHand+" "+secondPlayerHand+"|winner = "+winner;
   }
-  
+
   /*
   public int getWinner() {
       engine.calculateHand(firstPlayerHand);
@@ -112,11 +120,6 @@ public class HandContainer implements Serializable {
   }
   /**/
   
-  public boolean isFinished() {
-    return finished;
-  }
-  public void setFinished(boolean finished) {
-    this.finished = finished;
-  }
+
 
 }

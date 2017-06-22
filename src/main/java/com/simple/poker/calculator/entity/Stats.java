@@ -1,5 +1,7 @@
 package com.simple.poker.calculator.entity;
 
+import com.simple.poker.calculator.api.PokerCalculator;
+
 public class Stats {
 
   private static int firstPlayerWins = 0;
@@ -8,13 +10,13 @@ public class Stats {
 
   public static void setOutcome(int outcome) {
     switch (outcome) {
-      case 0 : draws++;
-               break;
-      case 1 : firstPlayerWins++;
-               break;
-      case 2 : secondPlayerWins++;
-               break;
-      default: break;
+      case PokerCalculator.DRAW_ID          : draws++;
+                                              break;
+      case PokerCalculator.FIRST_PLAYER_ID  : firstPlayerWins++;
+                                              break;
+      case PokerCalculator.SECOND_PLAYER_ID : secondPlayerWins++;
+                                              break;
+      default:                                break;
     }
   }
   
