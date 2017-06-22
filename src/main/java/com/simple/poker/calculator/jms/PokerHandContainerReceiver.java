@@ -9,6 +9,7 @@ import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.pool.PooledConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,10 @@ public class PokerHandContainerReceiver implements Runnable {
   private Session session;
   
   private MessageConsumer consumer;
+  
+  private Connection connection;
+  
+  private PooledConnectionFactory pooledFactory;
 
   @Override
   public void run() {
@@ -59,7 +64,14 @@ public class PokerHandContainerReceiver implements Runnable {
       } finally {
         try {
             session.close();
+            connection.close();
+            pooledFactory.clear();
+            pooledFactory.stop();
+            CalculatorMain.getBroker().stop();
+            System.exit(0);
         } catch (JMSException e) {
+            log.error(e.getLocalizedMessage());
+        } catch (Exception e) {
             log.error(e.getLocalizedMessage());
         }
       }
@@ -68,7 +80,8 @@ public class PokerHandContainerReceiver implements Runnable {
   private void initiateQueueSession() {
       try {
           ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(URL);
-          Connection connection = connectionFactory.createConnection();
+          pooledFactory = new PooledConnectionFactory(connectionFactory);
+          connection = pooledFactory.createConnection();
           connection.start();
           session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
           Destination destination = session.createQueue(QUEUE);

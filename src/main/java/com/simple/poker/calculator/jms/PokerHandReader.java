@@ -12,6 +12,7 @@ import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.pool.PooledConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,8 +47,10 @@ public class PokerHandReader implements Runnable {
 
   private void initiateQueueSession() {
       try {
+          //ActiveMQConnectionFactory connectionFactory = new PooledConnectionFactory(URL);
           ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(URL);
-          Connection connection = connectionFactory.createConnection();
+          PooledConnectionFactory pooledFactory = new PooledConnectionFactory(connectionFactory);
+          Connection connection = pooledFactory.createConnection();
           connection.start();
           session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
           Destination destination = session.createQueue(QUEUE);

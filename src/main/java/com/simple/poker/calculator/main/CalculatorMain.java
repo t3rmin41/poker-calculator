@@ -17,17 +17,19 @@ public class CalculatorMain {
   public static final String URL = "tcp://localhost:61616";
 
   public static final String QUEUE = "POKERHANDQUEUE";
+  
+  private static BrokerService broker = new BrokerService();
 
   public static void main(String[] args) throws Exception {
     
     log.info("Start poker calculator");
-    
-    BrokerService broker = new BrokerService();
-    
+
     TransportConnector connector = new TransportConnector();
     connector.setUri(new URI(URL));
     broker.addConnector(connector);
     broker.setUseJmx(false);
+    broker.setUseShutdownHook(true);
+    broker.setPersistent(false);
     broker.start();
 
     PokerHandContainerReceiver receiver = new PokerHandContainerReceiver();
@@ -49,4 +51,7 @@ public class CalculatorMain {
     receiverThread.start();
   }
 
+  public static BrokerService getBroker() {
+    return broker;
+  }
 }
