@@ -11,6 +11,7 @@ public class PokerCalculatorImpl implements PokerCalculator {
 
   @Override
   public Hand calculateHand(Hand hand) {
+    hand.arrangeHandByCardRank();
     if (isRepeatable(hand)) {
       calculateRepeatable(hand);
     } else {
@@ -21,7 +22,6 @@ public class PokerCalculatorImpl implements PokerCalculator {
     
   @Override
   public boolean isRepeatable(Hand hand) {
-    hand.arrangeHandByCardRank();
     for (int i = 0; i < POKER_CARD_COUNT; i++) {
       for (int j = i+1; j < POKER_CARD_COUNT; j++) {
         if (hand.getCards().get(i).getRankFormatted() == hand.getCards().get(j).getRankFormatted()) {
@@ -266,6 +266,8 @@ public class PokerCalculatorImpl implements PokerCalculator {
 
   @Override
   public int returnWinner(Hand firstHand, Hand secondHand) {
+      firstHand = calculateHand(firstHand);
+      secondHand = calculateHand(secondHand);
       if (firstHand.getStrength().getRating() != secondHand.getStrength().getRating()) {
           return firstHand.getStrength().getRating() > secondHand.getStrength().getRating() ? FIRST_PLAYER_ID : SECOND_PLAYER_ID;
       }
