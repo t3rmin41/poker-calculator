@@ -11,10 +11,11 @@ public class HandContainer implements Serializable {
   private static final int SECOND_PLAYER_ID = 2;
   
   private int id;
-  private Hand firstPlayerHand;
-  private Hand secondPlayerHand;
+  private Hand firstPlayerHand = new Hand();
+  private Hand secondPlayerHand = new Hand();
   private int winner = 0;
   private boolean finished;
+  //private PokerCalculatorEngine engine = new PokerCalculatorEngineImpl();
   
   public int getId() {
     return id;
@@ -34,20 +35,24 @@ public class HandContainer implements Serializable {
   public void setSecondPlayerHand(Hand secondPlayerHand) {
     this.secondPlayerHand = secondPlayerHand;
   }
-  
-  public void defineWinner() {
-      winner = returnWinner();
-  }
-  
-  public int getWinner() {
-      return winner;
-  }
+
+
 
   @Override
   public String toString() {
     return firstPlayerHand+" "+secondPlayerHand+"|winner = "+winner;
   }
   
+  /*
+  public int getWinner() {
+      engine.calculateHand(firstPlayerHand);
+      engine.calculateHand(secondPlayerHand);
+      return engine.returnWinner(firstPlayerHand, secondPlayerHand);
+  }
+  public void defineWinner() {
+      winner = returnWinner();
+  }
+
   private int returnWinner() {
       if (firstPlayerHand.getStrength().getRating() != secondPlayerHand.getStrength().getRating()) {
           return firstPlayerHand.getStrength().getRating() > secondPlayerHand.getStrength().getRating() ? FIRST_PLAYER_ID : SECOND_PLAYER_ID;
@@ -105,7 +110,8 @@ public class HandContainer implements Serializable {
       }
       return 0;
   }
-
+  /**/
+  
   public boolean isFinished() {
     return finished;
   }

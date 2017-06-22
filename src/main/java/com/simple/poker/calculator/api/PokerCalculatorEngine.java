@@ -4,6 +4,14 @@ import com.simple.poker.calculator.entity.Hand;
 
 public interface PokerCalculatorEngine {
 
+  public final int POKER_CARD_COUNT = 5;
+
+  static final int FIRST_PLAYER_ID = 1;
+  static final int SECOND_PLAYER_ID = 2;
+  static final int DRAW_ID = 0;
+    
+  Hand calculateHand(Hand hand);
+  
   boolean isRepeatable(Hand hand);
  
   void calculateRepeatable(Hand hand);
@@ -41,5 +49,7 @@ public interface PokerCalculatorEngine {
   int compareKickerRank(Hand firstHand, Hand secondHand);
   
   int compareOnePairKickerRank(Hand firstHand, Hand secondHand);
+  
+  int returnWinner(Hand firstHand, Hand secondHand);
 
 }
