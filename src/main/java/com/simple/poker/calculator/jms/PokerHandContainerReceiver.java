@@ -45,6 +45,7 @@ public class PokerHandContainerReceiver implements Runnable {
 
   private void readFromQueue() {
       try {
+        log.info("Start receiving from the queue");
         while (true) {
           Message message = consumer.receive();
           if (message instanceof ObjectMessage) {
