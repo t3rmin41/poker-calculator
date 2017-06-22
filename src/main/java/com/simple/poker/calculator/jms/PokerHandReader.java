@@ -68,6 +68,7 @@ public class PokerHandReader implements Runnable {
         br = new BufferedReader(new FileReader(datasourceFilePath));
         String line;
         int i = 1;
+        log.info("Start reading the datasource");
         while ((line = br.readLine()) != null) {
            String first = line.substring(0, 14);
            String second = line.substring(15, 29);
