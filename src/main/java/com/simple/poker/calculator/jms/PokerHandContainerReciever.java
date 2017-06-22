@@ -53,7 +53,7 @@ public class PokerHandContainerReciever implements Runnable {
             handContainer.setWinner(calc.returnWinner(handContainer.getFirstPlayerHand(), handContainer.getSecondPlayerHand()));
             //engine.returnWinner(handContainer.getFirstPlayerHand(), handContainer.getSecondPlayerHand());
             Stats.setOutcome(handContainer.getWinner());
-            //log.info("Sorted "+handContainer.getId()+" hand container : " + handContainer);
+            log.info("Sorted "+handContainer.getId()+" hand container : " + handContainer);
             //log.info("Hand #"+handContainer.getId()+" wins player #"+handContainer.getWinner());
           }
         }

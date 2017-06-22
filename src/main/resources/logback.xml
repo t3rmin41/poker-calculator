@@ -53,7 +53,7 @@
       </sift>
   </appender>
 
-  <logger name="com.simple.poker.calculator.impl" additivity="false">
+  <logger name="com.simple.poker.calculator.jms" additivity="false">
     <appender-ref ref="CONSOLE" />
     <appender-ref ref="OUTPUT" />
   </logger>
