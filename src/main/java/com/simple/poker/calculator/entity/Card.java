@@ -4,6 +4,12 @@ import java.io.Serializable;
 
 public class Card implements Comparable<Card>, Serializable {
   
+  public static final int A = 14;
+  public static final int K = 13;
+  public static final int Q = 12;
+  public static final int J = 11;
+  public static final int T = 10;
+    
   private String rank;
   
   private String color;
@@ -61,15 +67,15 @@ public class Card implements Comparable<Card>, Serializable {
                  break;
       case "9" : this.rankFormatted = 9;
                  break;
-      case "T" : this.rankFormatted = 10;
+      case "T" : this.rankFormatted = T;
                  break;
-      case "J" : this.rankFormatted = 11;
+      case "J" : this.rankFormatted = J;
                  break;
-      case "Q" : this.rankFormatted = 12;
+      case "Q" : this.rankFormatted = Q;
                  break;
-      case "K" : this.rankFormatted = 13;
+      case "K" : this.rankFormatted = K;
                  break;
-      case "A" : this.rankFormatted = 14;
+      case "A" : this.rankFormatted = A;
                  break;
       default  : this.rankFormatted = 0;
                  break;

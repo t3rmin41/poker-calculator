@@ -12,7 +12,7 @@ public class CardTest {
     @Test
     public void givenCardWhenCreateThenGetRank() {
         Card card = new Card("KD");
-        assertEquals(13, card.getRankFormatted());
+        assertEquals(Card.K, card.getRankFormatted());
     }
     
     @Test

@@ -147,9 +147,11 @@ public class PokerCalculatorImpl implements PokerCalculator {
   @Override
   public int getFullHousePairRank(Hand hand) {
     int pairRank = 0;
-    if (hand.getCards().get(0).getRankFormatted() == hand.getCards().get(1).getRankFormatted()) {
+    if (hand.getCards().get(0).getRankFormatted() == hand.getCards().get(1).getRankFormatted()
+        && hand.getCards().get(0).getRankFormatted() != hand.getCards().get(2).getRankFormatted()) {
       pairRank = hand.getCards().get(0).getRankFormatted();
-    } else if (hand.getCards().get(4).getRankFormatted() == hand.getCards().get(3).getRankFormatted()) {
+    } else if (hand.getCards().get(4).getRankFormatted() == hand.getCards().get(3).getRankFormatted()
+               && hand.getCards().get(4).getRankFormatted() != hand.getCards().get(2).getRankFormatted()) {
       pairRank = hand.getCards().get(4).getRankFormatted();
     }
     return pairRank;
@@ -256,7 +258,7 @@ public class PokerCalculatorImpl implements PokerCalculator {
             iterator.remove();
         }
     }
-    for (int i = 0; i < 3; i++) {
+    for (int i = 2; i > -1; i--) {
         if (firstHand.getCards().get(i).getRankFormatted() != secondHand.getCards().get(i).getRankFormatted()) {
             return firstHand.getCards().get(i).getRankFormatted() > secondHand.getCards().get(i).getRankFormatted() ? 1 : 2;
         }
