@@ -2,6 +2,7 @@ package com.simple.poker.calculator.entity;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class Card implements Comparable<Card>, Serializable {
   
   public static final int A = 14;

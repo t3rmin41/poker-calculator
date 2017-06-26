@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("serial")
 public class Hand implements Serializable {
 
   private HandStrength strength = HandStrength.HIGH_CARD;

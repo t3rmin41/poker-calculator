@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import com.simple.poker.calculator.api.PokerCalculator;
 
+@SuppressWarnings("serial")
 public class HandContainer implements Serializable {
 
   private int id;
