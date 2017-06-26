@@ -1,6 +1,7 @@
 package com.simple.poker.calculator.api.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
@@ -50,6 +51,15 @@ public class PokerCalculatorTest {
         fullHouse.getCards().addAll(Arrays.asList(cards));
         calc.calculateHand(fullHouse);
         assertEquals(HandStrength.FULL_HOUSE, fullHouse.getStrength());
+    }
+    
+    @Test
+    public void givenRepeatableShouldReturnRepeatable() {
+      Hand repeatable = new Hand();
+      Card[] cards = {new Card("AS"), new Card("KD"), new Card("7S"), new Card("2H"), new Card("7H")};
+      repeatable.getCards().addAll(Arrays.asList(cards));
+      calc.calculateHand(repeatable);
+      assertTrue(repeatable.isRepeatable());
     }
     
 }
