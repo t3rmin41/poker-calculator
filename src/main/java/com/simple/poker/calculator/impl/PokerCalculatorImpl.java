@@ -118,13 +118,17 @@ public class PokerCalculatorImpl implements PokerCalculator {
   @Override
   public int getTripsRank(Hand hand) {
     int tripsRank = 0;
-    if ((hand.getCards().get(2).getRankFormatted() == hand.getCards().get(3).getRankFormatted())
-        && (hand.getCards().get(2).getRankFormatted() == hand.getCards().get(4).getRankFormatted())) {
-      tripsRank = hand.getCards().get(2).getRankFormatted();
-    }
     if ((hand.getCards().get(2).getRankFormatted() == hand.getCards().get(0).getRankFormatted())
+            && (hand.getCards().get(2).getRankFormatted() == hand.getCards().get(1).getRankFormatted())) {
+          tripsRank = hand.getCards().get(2).getRankFormatted();
+    }
+    if ((hand.getCards().get(2).getRankFormatted() == hand.getCards().get(3).getRankFormatted())
         && (hand.getCards().get(2).getRankFormatted() == hand.getCards().get(1).getRankFormatted())) {
       tripsRank = hand.getCards().get(2).getRankFormatted();
+    }
+    if ((hand.getCards().get(2).getRankFormatted() == hand.getCards().get(3).getRankFormatted())
+            && (hand.getCards().get(2).getRankFormatted() == hand.getCards().get(4).getRankFormatted())) {
+          tripsRank = hand.getCards().get(2).getRankFormatted();
     }
     return tripsRank;
   }
