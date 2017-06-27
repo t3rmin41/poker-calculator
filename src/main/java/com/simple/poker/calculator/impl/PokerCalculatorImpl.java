@@ -1,5 +1,6 @@
 package com.simple.poker.calculator.impl;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import com.simple.poker.calculator.api.PokerCalculator;
@@ -233,6 +234,9 @@ public class PokerCalculatorImpl implements PokerCalculator {
 
   @Override
   public int getTwoPairKickerRank(Hand hand) {
+      int kickerRank = 0;
+      Card[] cards = new Card[5];
+      cards = hand.getCards().toArray(cards);
       int higherPairRank = getTwoPairHigherPairRank(hand);
       int lowerPairRank = getTwoPairLowerPairRank(hand);
       for (Iterator<Card> iterator = hand.getCards().iterator(); iterator.hasNext();) {
@@ -245,17 +249,25 @@ public class PokerCalculatorImpl implements PokerCalculator {
               iterator.remove();
           }
       }
-      return hand.getCards().get(0).getRankFormatted();
+      kickerRank = hand.getCards().get(0).getRankFormatted();
+      hand.getCards().clear();
+      hand.getCards().addAll(Arrays.asList(cards));
+      return kickerRank;
   }
 
   @Override
   public int compareOnePairKickerRank(Hand firstHand, Hand secondHand) {
+    int playerId = 0;
+    Card[] cards1 = new Card[5];
+    cards1 = firstHand.getCards().toArray(cards1);
     int firstHandPairRank = getOnePairRank(firstHand);
     for (Iterator<Card> iterator = firstHand.getCards().iterator(); iterator.hasNext();) {
         if (iterator.next().getRankFormatted() == firstHandPairRank) {
             iterator.remove();
         }
     }
+    Card[] cards2 = new Card[5];
+    cards2 = secondHand.getCards().toArray(cards2);
     int secondHandPairRank = getOnePairRank(secondHand);
     for (Iterator<Card> iterator = secondHand.getCards().iterator(); iterator.hasNext();) {
         if (iterator.next().getRankFormatted() == secondHandPairRank) {
@@ -264,10 +276,15 @@ public class PokerCalculatorImpl implements PokerCalculator {
     }
     for (int i = 2; i > -1; i--) {
         if (firstHand.getCards().get(i).getRankFormatted() != secondHand.getCards().get(i).getRankFormatted()) {
-            return firstHand.getCards().get(i).getRankFormatted() > secondHand.getCards().get(i).getRankFormatted() ? 1 : 2;
+            playerId = firstHand.getCards().get(i).getRankFormatted() > secondHand.getCards().get(i).getRankFormatted() ? PokerCalculator.FIRST_PLAYER_ID : PokerCalculator.SECOND_PLAYER_ID;
+            break;
         }
     }
-    return 0;
+    firstHand.getCards().clear();
+    firstHand.getCards().addAll(Arrays.asList(cards1));
+    secondHand.getCards().clear();
+    secondHand.getCards().addAll(Arrays.asList(cards2));
+    return playerId;
   }
 
   @Override
