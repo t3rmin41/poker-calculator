@@ -154,7 +154,7 @@ public class PokerCalculatorTest {
     }
     
     @Test
-    public void handTwoPairCompareShouldReturnHigherKickerRank() {
+    public void handTwoPairCompareShouldReturnHigherKickerWinner() {
         Hand hand1 = new Hand();
         Card[] cards1 = {new Card("4S"), new Card("JD"), new Card("7S"), new Card("4H"), new Card("JH")};
         hand1.getCards().addAll(Arrays.asList(cards1));
@@ -171,7 +171,7 @@ public class PokerCalculatorTest {
     }
     
     @Test
-    public void handOnePairCompareShouldReturnHigherKickerRank() {
+    public void handOnePairCompareShouldReturnHigherKickerWinner() {
         Hand hand1 = new Hand();
         Card[] cards1 = {new Card("4S"), new Card("JD"), new Card("7S"), new Card("3H"), new Card("JH")};
         hand1.getCards().addAll(Arrays.asList(cards1));
@@ -219,5 +219,60 @@ public class PokerCalculatorTest {
         assertEquals(HandStrength.FULL_HOUSE, hand1.getStrength());
         assertEquals(HandStrength.FULL_HOUSE, hand2.getStrength());
         assertEquals(PokerCalculator.SECOND_PLAYER_ID, calc.returnWinner(hand1, hand2));
+    }
+    
+    @Test
+    public void handTwoPairCompareShouldReturnHigherPairWinner() {
+        Hand hand1 = new Hand();
+        Card[] cards1 = {new Card("4S"), new Card("QD"), new Card("7S"), new Card("4H"), new Card("QH")};
+        hand1.getCards().addAll(Arrays.asList(cards1));
+        calc.calculateHand(hand1);
+        
+        Hand hand2 = new Hand();
+        Card[] cards2 = {new Card("4S"), new Card("JD"), new Card("KS"), new Card("4H"), new Card("JH")};
+        hand2.getCards().addAll(Arrays.asList(cards2));
+        calc.calculateHand(hand2);
+        
+        assertEquals(HandStrength.TWO_PAIR, hand1.getStrength());
+        assertEquals(HandStrength.TWO_PAIR, hand2.getStrength());
+        assertEquals(PokerCalculator.FIRST_PLAYER_ID, calc.returnWinner(hand1, hand2));
+    }
+    
+    @Test
+    public void handTwoPairCompareShouldReturnHigherSecondPairWinner() {
+        Hand hand1 = new Hand();
+        Card[] cards1 = {new Card("5S"), new Card("JD"), new Card("7S"), new Card("5H"), new Card("JH")};
+        hand1.getCards().addAll(Arrays.asList(cards1));
+        calc.calculateHand(hand1);
+        
+        Hand hand2 = new Hand();
+        Card[] cards2 = {new Card("3S"), new Card("JD"), new Card("KS"), new Card("3H"), new Card("JH")};
+        hand2.getCards().addAll(Arrays.asList(cards2));
+        calc.calculateHand(hand2);
+        
+        assertEquals(HandStrength.TWO_PAIR, hand1.getStrength());
+        assertEquals(HandStrength.TWO_PAIR, hand2.getStrength());
+        assertEquals(Card.J, calc.getTwoPairHigherPairRank(hand1));
+        assertEquals(Card.J, calc.getTwoPairHigherPairRank(hand2));
+        assertEquals(5, calc.getTwoPairLowerPairRank(hand1));
+        assertEquals(3, calc.getTwoPairLowerPairRank(hand2));
+        assertEquals(PokerCalculator.FIRST_PLAYER_ID, calc.returnWinner(hand1, hand2));
+    }
+    
+    @Test
+    public void handTwoPairCompareShouldReturnDraw() {
+        Hand hand1 = new Hand();
+        Card[] cards1 = {new Card("4S"), new Card("JD"), new Card("KD"), new Card("4H"), new Card("JH")};
+        hand1.getCards().addAll(Arrays.asList(cards1));
+        calc.calculateHand(hand1);
+        
+        Hand hand2 = new Hand();
+        Card[] cards2 = {new Card("4S"), new Card("JD"), new Card("KS"), new Card("4C"), new Card("JH")};
+        hand2.getCards().addAll(Arrays.asList(cards2));
+        calc.calculateHand(hand2);
+        
+        assertEquals(HandStrength.TWO_PAIR, hand1.getStrength());
+        assertEquals(HandStrength.TWO_PAIR, hand2.getStrength());
+        assertEquals(PokerCalculator.DRAW_ID, calc.returnWinner(hand1, hand2));
     }
 }
