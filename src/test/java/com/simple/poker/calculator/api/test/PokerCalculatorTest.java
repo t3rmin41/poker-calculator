@@ -267,7 +267,7 @@ public class PokerCalculatorTest {
         calc.calculateHand(hand1);
         
         Hand hand2 = new Hand();
-        Card[] cards2 = {new Card("4S"), new Card("JD"), new Card("KS"), new Card("4C"), new Card("JH")};
+        Card[] cards2 = {new Card("JS"), new Card("4D"), new Card("4C"), new Card("KS"), new Card("JH")};
         hand2.getCards().addAll(Arrays.asList(cards2));
         calc.calculateHand(hand2);
         
