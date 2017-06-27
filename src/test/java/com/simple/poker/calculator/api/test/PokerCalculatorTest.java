@@ -25,7 +25,7 @@ public class PokerCalculatorTest {
       calc.calculateHand(repeatable);
       assertTrue(repeatable.isRepeatable());
     }
-    
+
     @Test
     public void handStraighShouldEqualToStraight() {
         Hand straight = new Hand();
@@ -34,7 +34,7 @@ public class PokerCalculatorTest {
         calc.calculateHand(straight);
         assertEquals(HandStrength.STRAIGHT, straight.getStrength());
     }
-    
+
     @Test
     public void handStraightFlushShouldEqualToStraightFlush() {
         Hand straighflush = new Hand();
@@ -167,7 +167,7 @@ public class PokerCalculatorTest {
         
         assertEquals(HandStrength.TWO_PAIR, hand1.getStrength());
         assertEquals(HandStrength.TWO_PAIR, hand2.getStrength());
-        assertEquals(PokerCalculator.SECOND_PLAYER_ID, calc.compareKickerRank(hand1, hand2));
+        assertEquals(PokerCalculator.SECOND_PLAYER_ID, calc.returnKickerWinner(hand1, hand2));
     }
     
     @Test
@@ -184,11 +184,11 @@ public class PokerCalculatorTest {
         
         assertEquals(HandStrength.ONE_PAIR, hand1.getStrength());
         assertEquals(HandStrength.ONE_PAIR, hand2.getStrength());
-        assertEquals(PokerCalculator.SECOND_PLAYER_ID, calc.compareOnePairKickerRank(hand1, hand2));
+        assertEquals(PokerCalculator.SECOND_PLAYER_ID, calc.returnOnePairKickerWinner(hand1, hand2));
     }
     
     @Test
-    public void handsFullHouseAndHigherFullHouseCompareShouldReturnCorrectWinner() {
+    public void handsFullHouseAndHigherPairFullHouseCompareShouldReturnCorrectWinner() {
         Hand hand1 = new Hand();
         Card[] cards1 = {new Card("4S"), new Card("JD"), new Card("4D"), new Card("4H"), new Card("JH")};
         hand1.getCards().addAll(Arrays.asList(cards1));
@@ -202,5 +202,22 @@ public class PokerCalculatorTest {
         assertEquals(HandStrength.FULL_HOUSE, hand1.getStrength());
         assertEquals(HandStrength.FULL_HOUSE, hand2.getStrength());
         assertEquals(PokerCalculator.FIRST_PLAYER_ID, calc.returnWinner(hand1, hand2));
+    }
+    
+    @Test
+    public void handsFullHouseAndHigherTripsFullHouseCompareShouldReturnCorrectWinner() {
+        Hand hand1 = new Hand();
+        Card[] cards1 = {new Card("3S"), new Card("JD"), new Card("3D"), new Card("3H"), new Card("JH")};
+        hand1.getCards().addAll(Arrays.asList(cards1));
+        calc.calculateHand(hand1);
+        
+        Hand hand2 = new Hand();
+        Card[] cards2 = {new Card("4S"), new Card("TD"), new Card("4C"), new Card("4H"), new Card("TS")};
+        hand2.getCards().addAll(Arrays.asList(cards2));
+        calc.calculateHand(hand2);
+        
+        assertEquals(HandStrength.FULL_HOUSE, hand1.getStrength());
+        assertEquals(HandStrength.FULL_HOUSE, hand2.getStrength());
+        assertEquals(PokerCalculator.SECOND_PLAYER_ID, calc.returnWinner(hand1, hand2));
     }
 }

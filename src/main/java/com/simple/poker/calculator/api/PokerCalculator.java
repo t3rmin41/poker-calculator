@@ -46,9 +46,9 @@ public interface PokerCalculator {
   
   int getTwoPairKickerRank(Hand hand);
 
-  int compareKickerRank(Hand firstHand, Hand secondHand);
+  int returnKickerWinner(Hand firstHand, Hand secondHand);
   
-  int compareOnePairKickerRank(Hand firstHand, Hand secondHand);
+  int returnOnePairKickerWinner(Hand firstHand, Hand secondHand);
   
   int returnWinner(Hand firstHand, Hand secondHand);
 

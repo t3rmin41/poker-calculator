@@ -223,13 +223,13 @@ public class PokerCalculatorImpl implements PokerCalculator {
   }
 
   @Override
-  public int compareKickerRank(Hand firstHand, Hand secondHand) {
+  public int returnKickerWinner(Hand firstHand, Hand secondHand) {
     for (int i = 0; i < POKER_CARD_COUNT; i++) {
         if (firstHand.getCards().get(i).getRankFormatted() != secondHand.getCards().get(i).getRankFormatted()) {
-            return firstHand.getCards().get(i).getRankFormatted() > secondHand.getCards().get(i).getRankFormatted() ? 1 : 2;
+            return firstHand.getCards().get(i).getRankFormatted() > secondHand.getCards().get(i).getRankFormatted() ? PokerCalculator.FIRST_PLAYER_ID : PokerCalculator.SECOND_PLAYER_ID;
         }
     }
-    return 0;
+    return PokerCalculator.FIRST_PLAYER_ID;
   }
 
   @Override
@@ -256,7 +256,7 @@ public class PokerCalculatorImpl implements PokerCalculator {
   }
 
   @Override
-  public int compareOnePairKickerRank(Hand firstHand, Hand secondHand) {
+  public int returnOnePairKickerWinner(Hand firstHand, Hand secondHand) {
     int playerId = 0;
     Card[] cards1 = new Card[5];
     cards1 = firstHand.getCards().toArray(cards1);
@@ -312,7 +312,7 @@ public class PokerCalculatorImpl implements PokerCalculator {
                                 return FIRST_PLAYER_ID;
                               }
                               return SECOND_PLAYER_ID;
-        case FLUSH          : return compareKickerRank(firstHand, secondHand);
+        case FLUSH          : return returnKickerWinner(firstHand, secondHand);
         case STRAIGHT       : return firstHand.getCards().get(4).getRankFormatted() > secondHand.getCards().get(4).getRankFormatted() ? FIRST_PLAYER_ID : SECOND_PLAYER_ID;
         case TRIPS          : if (getTripsRank(firstHand) > getTripsRank(secondHand)) {
                                 return FIRST_PLAYER_ID;
@@ -346,8 +346,8 @@ public class PokerCalculatorImpl implements PokerCalculator {
                               } else if (getOnePairRank(firstHand) < getOnePairRank(secondHand)) {
                                 return SECOND_PLAYER_ID;
                               }
-                              return compareOnePairKickerRank(firstHand, secondHand);
-        case HIGH_CARD      : return compareKickerRank(firstHand, secondHand);
+                              return returnOnePairKickerWinner(firstHand, secondHand);
+        case HIGH_CARD      : return returnKickerWinner(firstHand, secondHand);
       }
                               return DRAW_ID;
   }
