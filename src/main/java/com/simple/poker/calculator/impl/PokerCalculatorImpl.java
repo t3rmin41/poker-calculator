@@ -341,7 +341,12 @@ public class PokerCalculatorImpl implements PokerCalculator {
                               } else {
                                 return DRAW_ID;
                               }
-        case ONE_PAIR       : return compareOnePairKickerRank(firstHand, secondHand);
+        case ONE_PAIR       : if (getOnePairRank(firstHand) > getOnePairRank(secondHand)) {
+                                return FIRST_PLAYER_ID;
+                              } else if (getOnePairRank(firstHand) < getOnePairRank(secondHand)) {
+                                return SECOND_PLAYER_ID;
+                              }
+                              return compareOnePairKickerRank(firstHand, secondHand);
         case HIGH_CARD      : return compareKickerRank(firstHand, secondHand);
       }
                               return DRAW_ID;
